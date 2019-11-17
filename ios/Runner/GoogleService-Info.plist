@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>404950804290-upca945hittch4bf28i6urdjpdd8l4p0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.404950804290-upca945hittch4bf28i6urdjpdd8l4p0</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBOftc5CE_pqMwxfRXPtDgJ9sUVgnxe830</string>
+	<key>GCM_SENDER_ID</key>
+	<string>404950804290</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.fluttervic.maga</string>
+	<key>PROJECT_ID</key>
+	<string>maga-app-16872</string>
+	<key>STORAGE_BUCKET</key>
+	<string>maga-app-16872.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:404950804290:ios:f45ac20910784f5355cadb</string>
+	<key>DATABASE_URL</key>
+	<string>https://maga-app-16872.firebaseio.com</string>
+</dict>
+</plist>
