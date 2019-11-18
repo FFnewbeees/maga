@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maga/authentication/signUp.dart';
-import './authentication/signIn.dart';
-
+import 'package:maga/pages/welcome.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,11 +8,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MAGA App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: WelcomePage(),
     );
   }
 }
+
+
 

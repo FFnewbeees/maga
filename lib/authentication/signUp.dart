@@ -16,7 +16,9 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(),
+      appBar: new AppBar(
+        title: Text('Sign Up'),
+      ),
       body: Form(
         key: _formKey,
         child: Column(
@@ -62,7 +64,7 @@ void signUp() async {
             await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginPage()));
+              MaterialPageRoute(builder: (context) => SignInPage()));
         }catch(e){
           print(e.message);
         }
