@@ -20,6 +20,7 @@ class Login extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
               height: 80,
+              color: Colors.indigo,
 
             )
         ],),
