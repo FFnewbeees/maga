@@ -1,78 +1,35 @@
 {
   "project_info": {
-    "project_number": "404950804290",
-    "firebase_url": "https://maga-app-16872.firebaseio.com",
-    "project_id": "maga-app-16872",
-    "storage_bucket": "maga-app-16872.appspot.com"
+    "project_number": "579714998961",
+    "firebase_url": "https://maga-1a240.firebaseio.com",
+    "project_id": "maga-1a240",
+    "storage_bucket": "maga-1a240.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:404950804290:android:cc176858d349042055cadb",
-        "android_client_info": {
-          "package_name": "com.example.maga"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "404950804290-dps6l3s22vo8pmovfsa66t8fdjv8pr9b.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB806pSs1k4melRQigpe6031xNjBjCOniI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "404950804290-dps6l3s22vo8pmovfsa66t8fdjv8pr9b.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "404950804290-upca945hittch4bf28i6urdjpdd8l4p0.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.fluttervic.maga"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:404950804290:android:11ae13ae417f3ae455cadb",
+        "mobilesdk_app_id": "1:579714998961:android:7bd5b24ab70bbdbeb4b890",
         "android_client_info": {
           "package_name": "com.flutterAppAndroid.maga_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "404950804290-dps6l3s22vo8pmovfsa66t8fdjv8pr9b.apps.googleusercontent.com",
+          "client_id": "579714998961-s05mui8o9j9d26sfmdajg5bcgmor18mi.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB806pSs1k4melRQigpe6031xNjBjCOniI"
+          "current_key": "AIzaSyD1pswl894vMSK_RqT8-CQJsAKIA2Q9epo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "404950804290-dps6l3s22vo8pmovfsa66t8fdjv8pr9b.apps.googleusercontent.com",
+              "client_id": "579714998961-s05mui8o9j9d26sfmdajg5bcgmor18mi.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "404950804290-upca945hittch4bf28i6urdjpdd8l4p0.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.fluttervic.maga"
-              }
             }
           ]
         }
