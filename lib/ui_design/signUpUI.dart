@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maga/ui_design/newsUi.dart';
-import 'package:maga/ui_design/signUpUI.dart';
 
-class Login extends StatelessWidget {
+class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,43 +92,13 @@ class Login extends StatelessWidget {
                 color: Colors.white,
                 textColor: Colors.lightGreen,
                 padding: EdgeInsets.all(20.0),
-                child: Text('Login'.toUpperCase()),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => News(),
-                    )); 
-                },
+                child: Text('Sign Up'.toUpperCase()),
+                onPressed: (){},
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0)
                 ),
               ),
             ),
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FlatButton(
-                  textColor: Colors.white70,
-                  child: Text("Create Account".toUpperCase()),
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => SignUp(),
-                    ));  
-                  }
-                ),
-                Container(
-                  color: Colors.white54,
-                  width: 2.0,
-                  height: 20.0,
-                ),
-                FlatButton(
-                  textColor: Colors.white70,
-                  child: Text("Forgot Password".toUpperCase()),
-                  onPressed: (){},  
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0),
         ],
       ),
     )
