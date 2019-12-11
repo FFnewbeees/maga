@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 
+
 class News extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -71,23 +72,12 @@ class News extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(16.0, 16.0, 32.0, 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.book),
-                    SizedBox(height: 16.0),
-                    Text("Test News")
-                  ],
-                ),
-              ),
+              
             ],
             isSelected: [
               true,
               false,
-              false
+              
             ],
             onPressed: (index){},
           ),
@@ -108,13 +98,14 @@ class News extends StatelessWidget {
                             topLeft: Radius.circular(10.0),
                             topRight: Radius.circular(10.0),
                           ),
-                          //image: DecorationImage(),  
+                           
                         ),
+                        child:Image.asset('assets/recycling.jpg'),  
                       ),
                       Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Text(
-                          "Liverpool beat Lyon in Geneva to end pre-season",
+                          "Kingston recycling centre denied extension for second time by council",
                           style: titleTextStyle,
                           ),
                         ),
@@ -131,7 +122,7 @@ class News extends StatelessWidget {
                             ),
                             Spacer(),
                             Text(
-                              "Football",
+                              "Recycling",
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14.0,
@@ -143,21 +134,7 @@ class News extends StatelessWidget {
                       SizedBox(height: 20.0),
                     ],
                   ),
-                  Positioned(
-                    top: 190.0,
-                    left: 20.0,
-                    child: Container(
-                      color: Colors.green,
-                      padding: EdgeInsets.all(4.0),
-                      child: Text(
-                        "LIVE",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12.0
-                        ),
-                      ),
-                    ),
-                  )
+                  
                 ],
               ),
           ),
