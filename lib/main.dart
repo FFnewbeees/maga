@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maga/pages/welcome.dart';
+import 'package:maga/ui_design/loginUI.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WelcomePage(),
+      home: Login(),
     );
   }
 }
