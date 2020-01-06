@@ -4,7 +4,7 @@ class News extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color bgColor = Color(0xffF3F3F3);
-    final Color primaryColor = Colors.greenAccent;
+    final Color primaryColor = Color.fromRGBO(0, 102, 204, 0.3);;
 
     var titleTextStyle = TextStyle(color: Colors.black87, fontSize: 20.0);
     var teamNameTextStyle = TextStyle(
