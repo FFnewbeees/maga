@@ -4,6 +4,7 @@ import 'package:maga/ui_design/signUpUI.dart';
 
 class Login extends StatelessWidget {
   @override
+  final bool _test = true;
   Widget build(BuildContext context) {
     return Scaffold(
       body:Container(
