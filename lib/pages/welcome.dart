@@ -38,7 +38,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     child: GestureDetector(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => SignInPage(),
+                          builder: (context) => Login(),
                           ));
                       },
                       child: Container(
@@ -67,7 +67,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     child: GestureDetector(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => SignUpPage(),
+                          builder: (context) => SignUp(),
                           ));
                       },
                       child: Container(

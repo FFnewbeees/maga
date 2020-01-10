@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maga/ui_design/newsDetail.dart';
+import 'package:maga/news_feed/newsDetail.dart';
 
 
 
-class News extends StatelessWidget {
+class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color bgColor = Color(0xffF3F3F3);
@@ -18,18 +18,7 @@ class News extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                               color: Colors.grey.shade800,
                             );
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: Colors.green[300],
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Text(
-          "News Feed",
-          style: TextStyle(color: Colors.white, fontSize: 25.0),
-          ),
-      ),
-      body: Container(
+    return Container(
 
         child: ListView(
           padding: EdgeInsets.all(16.0),
@@ -89,16 +78,12 @@ class News extends StatelessWidget {
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        Container(
-                          height: 200.0,
-                          decoration: BoxDecoration(
+                        ClipRRect(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10.0),
                               topRight: Radius.circular(10.0),
                             ),
-                             
-                          ),
-                          child:Image.asset('assets/recycling.jpg'),  
+                          child:Image.asset('assets/recycling.jpg',fit: BoxFit.cover, width: double.infinity, height: 200.0,),  
                         ),
                         Padding(
                           padding: EdgeInsets.all(16.0),
@@ -146,9 +131,9 @@ class News extends StatelessWidget {
             Divider(),
             SizedBox(height: 10.0),
           ],),
-      ),
+      );
       
       
-    );
+    
   }
 }

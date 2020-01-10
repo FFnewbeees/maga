@@ -1,107 +1,174 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:maga/authentication/signUp.dart';
-import '../pages/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../navigation/tabs.dart';
 
-class SignInPage extends StatefulWidget{
-  @override 
-  _SignInPageState createState() => new _SignInPageState(); 
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => new _LoginState();
 }
 
-class _SignInPageState extends State<SignInPage>{
+class _LoginState extends State<Login> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  @override 
-  Widget build (BuildContext context){
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign In'),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        iconTheme: IconThemeData(color: Color(0xFF18D191)),
-      ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-              child: TextFormField(
-                validator: (input){
-                  if(input.isEmpty){
-                    return 'Please type an email';
-                  }
-                },
-                onSaved:(input) => _email = input ,
-                decoration: InputDecoration(
-                  labelText: 'Email:'
+      body:Form(
+          key:_formKey,
+          child: Container(
+          padding: const EdgeInsets.all(16.0),
+          height: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.green,
+                Colors.lightBlueAccent.withOpacity(0.6),
+              ]
+            )
+          ),
+          child: Column(
+            
+            children: <Widget>[
+              SizedBox(height: 80.0),
+              Container(
+                margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
+                height: 80,
+                child: Text('M.A.G.A', style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 46.0,
+                  fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-              child: TextFormField(
+              SizedBox(height: 40.0),
+              TextFormField(
                 validator: (input){
-                  if(input.length < 6){
-                    return 'Your password needs to be at least 6 characters';
+                  if(input.isEmpty){
+                    return 'Please enter an email';
                   }
                 },
-                onSaved:(input) => _password = input ,
+                onSaved: (input) => _email = input,
                 decoration: InputDecoration(
-                  labelText: 'Password:'
+                  contentPadding: EdgeInsets.all(16.0),
+                  prefixIcon: Container(
+                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    margin: EdgeInsets.only(right: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        bottomLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                        bottomRight: Radius.circular(10.0)
+                      ),
+                    ),
+                    child: Icon(Icons.person, color: Colors.lightGreen), 
+                  ),
+                  hintText: 'Enter Your Email',
+                  hintStyle: TextStyle(color:Colors.white54),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none
+                  ),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.5),
+                ),
+              ),
+              SizedBox(height: 10.0),
+                TextFormField(
+                  validator: (input){
+                    if(input.length < 6){
+                      return 'Password has to be at least 6 characters';
+                    }
+                  },
+                  onSaved: (input) => _password = input,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(16.0),
+                  prefixIcon: Container(
+                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    margin: EdgeInsets.only(right: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        bottomLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                        bottomRight: Radius.circular(10.0)
+                      ),
+                    ),
+                    child: Icon(Icons.lock, color: Colors.lightGreen), 
+                  ),
+                  hintText: 'Enter Your Password',
+                  hintStyle: TextStyle(color:Colors.white54),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none
+                  ),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.5),
                 ),
                 obscureText: true,
               ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20.0, right: 20.0, top: 10.0),
-                    child: GestureDetector(
-                      onTap: signIn,
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 60.0,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF18D191),
-                          borderRadius: BorderRadius.circular(9.0)),
-                        child: Text('Sign In',
-                          style: TextStyle(
-                            color: Colors.white, fontSize: 20.0),
-                            ),
-                        ),
-                    ),
+              SizedBox(height: 40.0),
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  color: Colors.white,
+                  textColor: Colors.lightGreen,
+                  padding: EdgeInsets.all(20.0),
+                  child: Text('Login'.toUpperCase()),
+                  onPressed: () => signIn(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)
+                  ),
                 ),
-              )
-            ],
-          ),
-          Expanded(child: Column(children: <Widget>[],),)
+              ),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlatButton(
+                    textColor: Colors.white70,
+                    child: Text("Create Account".toUpperCase()),
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => SignUp(),
+                      ));  
+                    }
+                  ),
+                  Container(
+                    color: Colors.white54,
+                    width: 2.0,
+                    height: 20.0,
+                  ),
+                  FlatButton(
+                    textColor: Colors.white70,
+                    child: Text("Forgot Password".toUpperCase()),
+                    onPressed: (){},  
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
           ],
         ),
-      ),
+    ),
+      )
+      
     );
   }
 
-void signIn() async{
+  void signIn() async{
     final formState = _formKey.currentState;
     if(formState.validate()){
       formState.save();
-      print("fk1");
       try{
-          AuthResult result = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
-          FirebaseUser user = result.user;
+          await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+          Navigator.pop(context);
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Home(user:user)));
+            MaterialPageRoute(builder: (context) => Tabs()));
       }catch(e){
         print(e.message);
       }
