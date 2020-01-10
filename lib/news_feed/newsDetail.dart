@@ -5,11 +5,11 @@ class NewsDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[300],
+        backgroundColor: Colors.green,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Text("Article Name", 
-        style: TextStyle(color: Colors.white, fontSize: 25.0)),
+        style: TextStyle(color: Colors.white)),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.share), onPressed: (){},)
         ],

@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
-class Profile extends StatelessWidget {
+class ProfilePage extends StatelessWidget {
 
   final List<Map> collections = [
     {
@@ -29,7 +29,7 @@ class Profile extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Container(
-            height: 200,
+            height: 150,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.green.shade200, Colors.green.shade400],
