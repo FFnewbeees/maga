@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maga/pages/welcome.dart';
-import 'package:maga/ui_design/loginUI.dart';
-import 'package:maga/ui_design/newsDetail.dart';
-import 'package:maga/ui_design/profile.dart';
-import 'package:maga/ui_design/newsUi.dart';
+import './navigation/tabs.dart';
+import './authentication/signIn.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -14,9 +12,10 @@ class MyApp extends StatelessWidget {
       title: 'MAGA App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        accentColor: Color.fromRGBO(59, 196, 185, 1),
       ),
-      home: News(),
+      home: Login(),
     );
   }
 }
