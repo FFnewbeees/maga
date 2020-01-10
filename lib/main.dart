@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         accentColor: Color.fromRGBO(59, 196, 185, 1),
       ),
-      home: Login(),
+      home: Tabs(),
     );
   }
 }
