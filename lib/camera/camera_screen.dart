@@ -11,59 +11,58 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
+    return Scaffold(
+      body: 
         ListView.builder(
           itemBuilder: (ctx, index) {
             return PictureItem();
           },
           itemCount: 1,
         ),
-        Positioned(
-          bottom: 20,
-          right: 10,
-          child: FloatingActionButton(
+        floatingActionButton: new FloatingActionButton(
             child: Icon(Icons.camera_alt),
             onPressed: _cameraAction,
           ),
-        ),
-      ],
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        );
+    
   }
 
   void _cameraAction() {
     showCupertinoModalPopup(
-      context: context,
-      builder: (ctx) {
-        return new CupertinoActionSheet(
-          actions: <Widget>[
-            CupertinoActionSheetAction(
-              child: const Text('Open Camera'),
-              onPressed: (){
-                _getImage(context, ImageSource.camera);
-                Navigator.of(context).pop();
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: const Text('Open Gallery'),
-              onPressed: (){
-                _getImage(context, ImageSource.gallery);
-                Navigator.of(context).pop();
-              },
-            ),
-            SizedBox(height: 20,),
-            CupertinoActionSheetAction(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      }
-    );
+        context: context,
+        builder: (ctx) {
+          return new CupertinoActionSheet(
+            actions: <Widget>[
+              CupertinoActionSheetAction(
+                child: const Text('Open Camera'),
+                onPressed: () {
+                  _getImage(context, ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+              CupertinoActionSheetAction(
+                child: const Text('Open Gallery'),
+                onPressed: () {
+                  _getImage(context, ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              CupertinoActionSheetAction(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
-  void _getImage(BuildContext context, ImageSource imageSource){  
+
+  void _getImage(BuildContext context, ImageSource imageSource) {
     ImagePicker.pickImage(source: imageSource);
   }
 }
