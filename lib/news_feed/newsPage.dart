@@ -56,82 +56,91 @@ class _NewsPageState extends State<NewsPage> {
     final Color bgColor = Color(0xffF3F3F3);
     final Color primaryColor = Color.fromRGBO(0, 102, 204, 0.3);
 
-    // var titleTextStyle = TextStyle(
-    //   color: Colors.black87,
-    //   fontSize: 20.0
-    // );
-    // var teamNameTextStyle = TextStyle(
-    //                           fontSize: 18.0,
-    //                           fontWeight: FontWeight.w500,
-    //                           color: Colors.grey.shade800,
-    //                         );
-
-    
-
-    return Container(
-        child: ListView(
-          padding: EdgeInsets.all(16.0),
-          children: <Widget>[
-            Center(
-              child: ToggleButtons(
-                fillColor: primaryColor,
-                hoverColor: primaryColor,
-                renderBorder: true,
-                borderRadius: BorderRadius.circular(10.0),
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 16.0, 32.0, 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(Icons.av_timer),
-                        SizedBox(height: 16.0),
-                        Text(
-                          "Latest News",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16.0),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 16.0, 32.0, 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(Icons.public),
-                        SizedBox(height: 16.0),
-                        Text("Recycle News",
-                        )
-                      ],
-                    ),
-                  ),
+    return Column(
+      
+      // children: <Widget>[
+      //   SizedBox(height: 5,),
+      //   Center(
+      //         child: ToggleButtons(
+      //           fillColor: primaryColor,
+      //           hoverColor: primaryColor,
+      //           renderBorder: true,
+      //           borderRadius: BorderRadius.circular(10.0),
+      //           children: <Widget>[
+      //             Container(
+      //               padding: EdgeInsets.fromLTRB(16.0, 16.0, 32.0, 16.0),
+      //               child: Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 children: <Widget>[
+      //                   Icon(Icons.av_timer),
+      //                   SizedBox(height: 16.0),
+      //                   Text(
+      //                     "Latest News",
+      //                     style: TextStyle(
+      //                       fontWeight: FontWeight.bold, fontSize: 16.0),
+      //                   )
+      //                 ],
+      //               ),
+      //             ),
+      //             Container(
+      //               padding: EdgeInsets.fromLTRB(16.0, 16.0, 32.0, 16.0),
+      //               child: Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 mainAxisSize: MainAxisSize.min,
+      //                 children: <Widget>[
+      //                   Icon(Icons.public),
+      //                   SizedBox(height: 16.0),
+      //                   Text("Recycle News",
+      //                   )
+      //                 ],
+      //               ),
+      //             ),
                   
-                ],
-                isSelected: [
-                  true,
-                  false,
+      //           ],
+      //           isSelected: [
+      //             true,
+      //             false,
                   
-                ],
-                onPressed: (index){},
-              ),
-            ),
-            SizedBox(height: 16.0),
-            //place news item here
-            GestureDetector(
-              child: NewsItem(),
-              onTap: (){
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => NewsDetail(),
-                      )); 
-                  },
-            ),
-            SizedBox(height: 10.0),
-            Divider(),
-            SizedBox(height: 10.0),
-          ],
-          ),
+      //           ],
+      //           onPressed: (index){},
+      //         ),
+      //       ),
+      //       ListView.builder(
+      //         itemBuilder: (ctx,index) {
+      //           return NewsItem(
+      //             thumbNail: _items[index].thumbNail, 
+      //             title: _items[index].title, 
+      //             description: _items[index].description, 
+      //             date: _items[index].date,
+      //             author: _items[index].author,
+      //             url:_items[index].url,
+                  
+      //             );
+      //         },
+      //         itemCount: _items.length,
+      //       ),
+            
+      // ],
+            
+      //   // child: ListView(
+      //   //   padding: EdgeInsets.all(16.0),
+      //   //   children: <Widget>[
+           
+      //   //     SizedBox(height: 16.0),
+      //   //     //place news item here
+      //   //     GestureDetector(
+      //   //       child: NewsItem(),
+      //   //       onTap: (){
+      //   //             Navigator.push(context, MaterialPageRoute(
+      //   //               builder: (context) => NewsDetail(),
+      //   //               )); 
+      //   //           },
+      //   //     ),
+      //   //     SizedBox(height: 10.0),
+      //   //     Divider(),
+      //   //     SizedBox(height: 10.0),
+      //   //   ],
+      //   //   ),
       );
       
       
