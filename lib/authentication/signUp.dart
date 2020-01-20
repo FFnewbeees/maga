@@ -151,10 +151,13 @@ class _SignUpState extends State<SignUp> {
 
   void signUp() async {
   final formState = _formKey.currentState;
+  print("wtf1");
       if(formState.validate()){
+        print("wtf2");
         formState.save();
         try{
             await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+             print("wtf3");
             Navigator.pop(context);
             Navigator.pushReplacement(
               context,

@@ -49,7 +49,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 },
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               CupertinoActionSheetAction(
                 child: const Text('Cancel'),
@@ -62,7 +62,7 @@ class _CameraScreenState extends State<CameraScreen> {
         });
   }
 
-  void _getImage(BuildContext context, ImageSource imageSource) {
+  void _getImage(BuildContext context, ImageSource imageSource) async {
     ImagePicker.pickImage(source: imageSource);
   }
 }
