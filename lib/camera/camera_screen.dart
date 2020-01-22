@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maga/camera/pictureItem.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:maga/camera/result_screen.dart';
 import 'package:maga/loader/loader.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -93,14 +94,20 @@ class _CameraScreenState extends State<CameraScreen> {
           await cloudLabeler.processImage(FirebaseVisionImage.fromFile(image));
     } catch (e) {
       print(e);
+      setState(() {
+      showLoader = false;
+    });
+    return;
     }
     setState(() {
       showLoader = false;
     });
+    print("length of result "+labels.length.toString());
     for (ImageLabel label in labels) {
       print(label.confidence);
       print(label.text);
       print("----------------\n");
     }
+    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ResultScreen(false,labels,image)));
   }
 }

@@ -6,7 +6,7 @@ class PictureItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen())),
+      //onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen())),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 4,
