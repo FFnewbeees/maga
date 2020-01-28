@@ -37,7 +37,7 @@ class _NewsPageState extends State<NewsPage> {
 
           _isLoading = true;
  
-          const url = 'https://content.guardianapis.com/search?q=australia&tag=environment/recycling&from-date=2018-01-01&show-tags=contributor&show-fields=body,thumbnail,short-url&show-refinements=all&order-by=relevance&api-key=ed144467-d910-464d-93bd-f864c65a3b1c';
+          const url = 'https://content.guardianapis.com/search?q=australia&tag=environment/recycling&from-date=2018-01-01&show-tags=contributor&show-fields=body,thumbnail,short-url&show-refinements=all&order-by=relevance&api-key=ed144467-d910-464d-93bd-f864c65a3b1c&page-size=50';
           
           try{
             final response = await http.get(url);

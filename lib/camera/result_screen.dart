@@ -15,11 +15,12 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
+   // print('fk'+widget.labels[0].text.toString());
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('result'),
+          title: Text('Result'),
           actions: <Widget>[
             widget.iconCheck
                 ? IconButton(
@@ -45,7 +46,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   itemBuilder: (ctx, index) {
                     return ListTile(
                       title: Text(widget.labels[index].text),
-                      subtitle: Text(widget.labels[index].entityId +
+                      subtitle: Text(widget.labels[index].entityId.toString() +
                           "\n" +
                           widget.labels[index].confidence.toString()),
                       isThreeLine: true,
