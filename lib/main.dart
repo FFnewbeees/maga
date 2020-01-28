@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '././news_feed/newsDetail.dart';
 import './navigation/tabs.dart';
 import './authentication/signIn.dart';
+
 
 
 void main() => runApp(MyApp());
@@ -15,7 +17,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         accentColor: Color.fromRGBO(59, 196, 185, 1),
       ),
-      home: Tabs(),
+      //home: Tabs(),
+      //initialRoute: '/',
+      routes: {
+        '/': (ctx) => Tabs(),
+        NewsDetail.routeName: (ctx) => NewsDetail(),
+      },
     );
   }
 }

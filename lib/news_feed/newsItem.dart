@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'newsDetail.dart';
 
 class NewsItem extends StatelessWidget {
 
-  // final String id;
+  final String id;
   final String thumbNail;
   final String title;
   final String date;
-  final String description;
+  //final String description;
   final String author;
-  final String url;
+  final String content;
   bool isFavourite;
 
   NewsItem({
-    // @required this.id, 
+    @required this.id, 
     @required this.thumbNail, 
     @required this.title, 
-    @required this.description, 
+   // @required this.description, 
     @required this.date, 
     @required this.author,
-    @required this.url,
+    @required this.content,
     isFavourite = false
     });
   
@@ -32,8 +32,26 @@ class NewsItem extends StatelessWidget {
       fontSize: 20.0
     );
 
+    final dateFormat = DateFormat('yyyy-MM-dd');
+
+    void selectNews(BuildContext context){
+      Navigator.of(context).pushNamed(
+        NewsDetail.routeName, 
+        arguments: {
+          'thumbNail': thumbNail, 
+          'title': title, 
+          'date': date, 
+          'author': author, 
+          'content': content, 
+          'isFavourite': isFavourite
+        }
+      );
+    }
+
     return InkWell(
-          onTap: null,
+          onTap: () => selectNews(context),
+          splashColor: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(10.0),
           child: Card(
                   elevation: 4.0,
                   shape: RoundedRectangleBorder(
@@ -53,8 +71,10 @@ class NewsItem extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Text(
-                                description,
+                                title,
                                 style: titleTextStyle,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             Padding(
@@ -62,15 +82,17 @@ class NewsItem extends StatelessWidget {
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                    date,
+                                    dateFormat.format(DateTime.parse(date)) ,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 14.0,
                                     ),
                                   ),
                                   Spacer(),
-                                  Text(
+                                  Text(  
                                     author,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14.0,

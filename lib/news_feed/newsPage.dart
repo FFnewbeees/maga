@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'package:maga/news_feed/news.dart';
 import 'newsItem.dart';
 import 'package:flutter/material.dart';
-import 'package:maga/news_feed/newsDetail.dart';
-import 'newsItem.dart';
 import 'package:http/http.dart' as http;
+import 'package:maga/loader/loader.dart';
 
 
 class NewsPage extends StatefulWidget {
@@ -13,134 +13,92 @@ class NewsPage extends StatefulWidget {
 
 class _NewsPageState extends State<NewsPage> {
 
-  List<NewsItem> _items= [];
-
+  List<News> _items= [];
+  bool _isLoading = false;
+  bool _isInit = true;
+  
   @override               
     void initState(){
-        //1. fetching api for news list
-        Future<void> fetchNews() async{
-          const url = 'https://newsapi.org/v2/everything?q=australia recycling waste&from=2019-12-13&to=2020-01-12&sortBy=relevancy&apiKey=431886ee5bc44afe854fbbe6a37747ff';
-          try{
-          
-          final response = await http.get(url);
-          final data = json.decode(response.body) as Map<String, dynamic>;
 
-          final List<NewsItem> loadedNews = [];
-          data.forEach((articles, newsData){
-            loadedNews.add(NewsItem(
-              title: newsData['title'],
-              description: newsData['description'],
-              author: newsData['author'],
-              date: newsData['publishedAt'],
-              url: newsData['url'],
-              thumbNail: newsData['urlToImage'],
-            ));
-          });
-          _items = loadedNews;
-          print(jsonDecode(response.body));
+    super.initState();
+      
+    }
+
+  @override
+    void didChangeDependencies() {
+      
+      if(_isInit){
+        setState(() {
+          _isLoading = true;
+        });
+         //1. fetching api for news list
+
+        Future<void> fetchNews() async{
+
+          _isLoading = true;
+ 
+          const url = 'https://content.guardianapis.com/search?q=australia&tag=environment/recycling&from-date=2018-01-01&show-tags=contributor&show-fields=body,thumbnail,short-url&show-refinements=all&order-by=relevance&api-key=ed144467-d910-464d-93bd-f864c65a3b1c';
+          
+          try{
+            final response = await http.get(url);
+
+            final data = json.decode(utf8.decode(response.bodyBytes));
+           
+            final articleData = data['response']['results'] as List<dynamic>;
+
+            final List<News> loadedNews = [];
+            
+              articleData.forEach((data) {
+                loadedNews.add(
+                  News(
+                    id:data['id'],
+                    thumbNail: data['fields']['thumbnail'],
+                    title: data['webTitle'],
+                    date: data['webPublicationDate'],
+                    author: data['tags'][0]['webTitle'],
+                    content: data['fields']['body']
+                  ));
+              });
+            _items = loadedNews;
+
+           // print(_items[0].author);
           }catch(error){
-            //add a loading indicator
-            // throw(error);
+            //throw(error);
             print(error);
-          }
+          }   
       }
 
-      fetchNews();
-      super.initState();
-      
+      fetchNews().then((_){
+        setState(() {
+           _isLoading = false;
+        });
+      });
+      }
+
+      _isInit = false;
+      super.didChangeDependencies();
     }
 
 
   @override
   Widget build(BuildContext context) {
-    final Color bgColor = Color(0xffF3F3F3);
-    final Color primaryColor = Color.fromRGBO(0, 102, 204, 0.3);
 
-    return Column(
+    return Scaffold(
       
-      // children: <Widget>[
-      //   SizedBox(height: 5,),
-      //   Center(
-      //         child: ToggleButtons(
-      //           fillColor: primaryColor,
-      //           hoverColor: primaryColor,
-      //           renderBorder: true,
-      //           borderRadius: BorderRadius.circular(10.0),
-      //           children: <Widget>[
-      //             Container(
-      //               padding: EdgeInsets.fromLTRB(16.0, 16.0, 32.0, 16.0),
-      //               child: Column(
-      //                 crossAxisAlignment: CrossAxisAlignment.start,
-      //                 children: <Widget>[
-      //                   Icon(Icons.av_timer),
-      //                   SizedBox(height: 16.0),
-      //                   Text(
-      //                     "Latest News",
-      //                     style: TextStyle(
-      //                       fontWeight: FontWeight.bold, fontSize: 16.0),
-      //                   )
-      //                 ],
-      //               ),
-      //             ),
-      //             Container(
-      //               padding: EdgeInsets.fromLTRB(16.0, 16.0, 32.0, 16.0),
-      //               child: Column(
-      //                 crossAxisAlignment: CrossAxisAlignment.start,
-      //                 mainAxisSize: MainAxisSize.min,
-      //                 children: <Widget>[
-      //                   Icon(Icons.public),
-      //                   SizedBox(height: 16.0),
-      //                   Text("Recycle News",
-      //                   )
-      //                 ],
-      //               ),
-      //             ),
-                  
-      //           ],
-      //           isSelected: [
-      //             true,
-      //             false,
-                  
-      //           ],
-      //           onPressed: (index){},
-      //         ),
-      //       ),
-      //       ListView.builder(
-      //         itemBuilder: (ctx,index) {
-      //           return NewsItem(
-      //             thumbNail: _items[index].thumbNail, 
-      //             title: _items[index].title, 
-      //             description: _items[index].description, 
-      //             date: _items[index].date,
-      //             author: _items[index].author,
-      //             url:_items[index].url,
-                  
-      //             );
-      //         },
-      //         itemCount: _items.length,
-      //       ),
-            
-      // ],
-            
-      //   // child: ListView(
-      //   //   padding: EdgeInsets.all(16.0),
-      //   //   children: <Widget>[
-           
-      //   //     SizedBox(height: 16.0),
-      //   //     //place news item here
-      //   //     GestureDetector(
-      //   //       child: NewsItem(),
-      //   //       onTap: (){
-      //   //             Navigator.push(context, MaterialPageRoute(
-      //   //               builder: (context) => NewsDetail(),
-      //   //               )); 
-      //   //           },
-      //   //     ),
-      //   //     SizedBox(height: 10.0),
-      //   //     Divider(),
-      //   //     SizedBox(height: 10.0),
-      //   //   ],
-      //   //   ),
+      body: _isLoading ? Loader() :
+            ListView.builder(
+              itemBuilder: (ctx,index) {
+                return NewsItem(
+                  id:_items[index].id,
+                  thumbNail: _items[index].thumbNail, 
+                  title: _items[index].title, 
+                  date: _items[index].date, 
+                  author: _items[index].author,
+                  content: _items[index].content,
+                  );
+              },
+              itemCount: _items.length,
+            ),
       );
       
       
