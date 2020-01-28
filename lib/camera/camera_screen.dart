@@ -105,6 +105,7 @@ class _CameraScreenState extends State<CameraScreen> {
     print("length of result "+labels.length.toString());
     for (ImageLabel label in labels) {
       print(label.confidence);
+      print(label.entityId);
       print(label.text);
       print("----------------\n");
     }
