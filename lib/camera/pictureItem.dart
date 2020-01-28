@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import './result_screen.dart';
 
 class PictureItem extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: ()=> null,
+      //onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen())),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 4,
-        margin: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(
           children: <Widget>[
             Stack(
@@ -25,7 +26,6 @@ class PictureItem extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                
               ],
             ),
             Padding(
@@ -44,7 +44,6 @@ class PictureItem extends StatelessWidget {
                       Text('18/01/2020'),
                     ],
                   ),
-                 
                   Row(
                     children: <Widget>[
                       Icon(

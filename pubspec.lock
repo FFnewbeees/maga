@@ -43,6 +43,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+<<<<<<< HEAD
   chewie:
     dependency: transitive
     description:
@@ -50,6 +51,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.8+1"
+=======
+>>>>>>> master
   cloud_firestore:
     dependency: "direct main"
     description:
@@ -92,6 +95,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
+    version: "0.1.2"
   firebase:
     dependency: transitive
     description:
@@ -99,6 +103,16 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.2.0"
+<<<<<<< HEAD
+=======
+  firebase_analytics:
+    dependency: "direct main"
+    description:
+      name: firebase_analytics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.10"
+>>>>>>> master
   firebase_auth:
     dependency: "direct main"
     description:
@@ -107,7 +121,7 @@ packages:
     source: hosted
     version: "0.14.0+9"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
@@ -127,6 +141,16 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
+<<<<<<< HEAD
+=======
+  firebase_ml_vision:
+    dependency: "direct main"
+    description:
+      name: firebase_ml_vision
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.3+5"
+>>>>>>> master
   flutter:
     dependency: "direct main"
     description: flutter
@@ -156,6 +180,7 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+<<<<<<< HEAD
   flutter_widget_from_html:
     dependency: "direct main"
     description:
@@ -179,6 +204,10 @@ packages:
     version: "0.14.0+3"
   http:
     dependency: "direct main"
+=======
+  http:
+    dependency: transitive
+>>>>>>> master
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -205,6 +234,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3+1"
+<<<<<<< HEAD
   intl:
     dependency: "direct main"
     description:
@@ -212,6 +242,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+=======
+>>>>>>> master
   js:
     dependency: transitive
     description:
@@ -443,4 +475,8 @@ packages:
     version: "3.5.0"
 sdks:
   dart: ">=2.7.0-dev <3.0.0"
+<<<<<<< HEAD
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
+=======
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+>>>>>>> master
