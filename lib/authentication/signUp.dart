@@ -119,7 +119,9 @@ class _SignUpState extends State<SignUp> {
                   textColor: Colors.lightGreen,
                   padding: EdgeInsets.all(20.0),
                   child: Text('Sign Up'.toUpperCase()),
-                  onPressed: () => signUp(),
+                  onPressed: () { 
+                    signUp();
+                  } ,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0)
                   ),
@@ -143,27 +145,43 @@ class _SignUpState extends State<SignUp> {
               SizedBox(height: 10.0),
           ],
         ),
-    ),
-      )
-      
+      ),
+    )
+    
     );
+    
   }
 
-  void signUp() async {
+  Future signUp() async {
   final formState = _formKey.currentState;
   print("wtf1");
       if(formState.validate()){
-        print("wtf2");
+  
         formState.save();
         try{
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
-             print("wtf3");
-            Navigator.pop(context);
-            Navigator.pushReplacement(
+            final response = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+            if(response.user != null)
+            {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Tabs()));
+            }
+            
         }catch(e){
-          print(e.message);
+           return showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context){
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text('Error'),
+              content: Text(e),
+              elevation: 24.0,
+              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+            );
+          }
+        );
         }
 
         

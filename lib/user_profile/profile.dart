@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
+  ProfilePage({Key key}) : super(key: key);
 
   final List<Map> collections = [
     {
@@ -26,6 +27,9 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+      ),
       body: Stack(
         children: <Widget>[
           Container(

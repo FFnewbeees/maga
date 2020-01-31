@@ -1,15 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:convert/convert.dart' as convert;
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'newsBottomSheet.dart';
 
-class NewsDetail extends StatelessWidget {
+
+class NewsDetail extends StatefulWidget {
 
   static const routeName = '/news-detail';
 
-  final dateFormat = DateFormat('yyyy-MM-dd');
+  @override
+  _NewsDetailState createState() => _NewsDetailState();
+}
 
+class _NewsDetailState extends State<NewsDetail> {
+  final dateFormat = DateFormat('yyyy-MM-dd');
+  bool isFavourite = false;
+  
   @override
   Widget build(BuildContext context) {
 
@@ -19,11 +27,76 @@ class NewsDetail extends StatelessWidget {
     final date = routeArgs['date'];
     final author = routeArgs['author'];
     final content = routeArgs['content'];
+    final url = routeArgs['url'];
+    //bool isFavourite = false;
+
+      openBottomSheet(context){
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => BottomSheetWidget(url:url),
+        );
+    }
     
+    void saveAsFavourite() async{
+    
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+
+    final CollectionReference collectionRef = Firestore.instance.collection('users');
+    final postRef = collectionRef.document(uid);
+
+    try{
+
+      var data = {
+        'thumbNail': imageUrl,
+        'title': title,
+        'date': date,
+        'author': author,
+        'content': content,
+        'url': url,
+        'isFavourite': isFavourite = true
+    };
+
+      await postRef.updateData({
+        "favNews" : FieldValue.arrayUnion([data])
+      });
+       setState(() {
+          isFavourite = true;
+        });
+
+        return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context){
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text('Reminder'),
+              content: Text('Saved Successful'),
+              elevation: 24.0,
+              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+            );
+          }
+        );
+      
+
+    }catch(error){
+      return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context){
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text('Error'),
+              content: Text(error),
+              elevation: 24.0,
+              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+            );
+          }
+        );
+    }
+  }
    
-
-
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -31,10 +104,32 @@ class NewsDetail extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text("Article Detail", 
         style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.share), onPressed: (){},)
+      ),
+
+      bottomNavigationBar: BottomAppBar(
+      color: Colors.grey[100],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: (){
+              openBottomSheet(context);
+            },
+          ),
+    
+          IconButton(
+            icon: isFavourite ? Icon(Icons.favorite,color: Colors.red,) : Icon(Icons.favorite_border),
+            onPressed: (){
+               saveAsFavourite();
+            },
+          ),
+    
         ],
       ),
+    ),
+  
 
       body: SingleChildScrollView(
         child: Container(
@@ -63,27 +158,14 @@ class NewsDetail extends StatelessWidget {
                     SizedBox(height: 10.0),
                     Divider(),
                     SizedBox(height: 10.0),
-                    Row(children: <Widget>[
-                      Icon(Icons.favorite_border),
-                      SizedBox(width: 5.0),
-                      Text("20.2k"),
-                      // SizedBox(width: 16.0),
-                      // Icon(Icons.comment),
-                      // SizedBox(width: 5.0),
-                      // Text("2.2k")
-                    ],),
-                    SizedBox(height: 10.0),
                     HtmlWidget(content),
-                    SizedBox(height: 10.0),
+                    
                   ],
               ),)
             ],
           ),
         ),
       ),
-
-
-
     );
   }
 }

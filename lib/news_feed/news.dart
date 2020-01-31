@@ -7,7 +7,8 @@ class News {
   final String date;
   final String author;
   final String content;
-  bool isFavourite;
+  final String url;
+  bool isFavourite = false;
 
   News({
     @required this.id, 
@@ -16,7 +17,8 @@ class News {
     @required this.date, 
     @required this.author,
     @required this.content,
-    isFavourite = false
+    @required this.url,
+    this.isFavourite 
   });
 
 }

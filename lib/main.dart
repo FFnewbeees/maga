@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '././news_feed/newsDetail.dart';
 import './navigation/tabs.dart';
 import './authentication/signIn.dart';
+import './news_feed/newsBottomSheet.dart';
 
 
 
