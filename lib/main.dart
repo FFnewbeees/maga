@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '././news_feed/newsDetail.dart';
 import './navigation/tabs.dart';
 import './authentication/signIn.dart';
+import './news_feed/newsBottomSheet.dart';
 
 
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       //home: Tabs(),
       //initialRoute: '/',
       routes: {
-        '/': (ctx) => Tabs(),
+        '/': (ctx) => Login(),
         NewsDetail.routeName: (ctx) => NewsDetail(),
       },
     );

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../camera/camera_screen.dart';
 import '../news_feed/newsPage.dart';
@@ -18,6 +19,9 @@ class _TabsState extends State<Tabs> {
       {'page': NewsPage(), 'title': 'News Feed'},
       {'page': ProfilePage(), 'title': 'Profile'},
     ];
+
+    _welcomeMessage();
+
     super.initState();
   }
 
@@ -27,6 +31,26 @@ class _TabsState extends State<Tabs> {
     setState(() {
       _selectedPageIndex = index;
     });
+  }
+
+  Future _welcomeMessage() async{
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseUser user = await auth.currentUser();
+    if(user != null){
+      return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context){
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text('Message'),
+              content: Text('Welcome' + user.email),
+              elevation: 24.0,
+              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+            );
+          }
+        );
+    }
   }
 
   @override

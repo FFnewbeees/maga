@@ -119,7 +119,9 @@ class _LoginState extends State<Login> {
                   textColor: Colors.lightGreen,
                   padding: EdgeInsets.all(20.0),
                   child: Text('Login'.toUpperCase()),
-                  onPressed: () => signIn(),
+                  onPressed: () {              
+                    signIn();           
+                  } ,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0)
                   ),
@@ -159,18 +161,34 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void signIn() async{
+  Future signIn() async{
     final formState = _formKey.currentState;
     if(formState.validate()){
       formState.save();
       try{
-          await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
-          Navigator.pop(context);
-          Navigator.pushReplacement(
+        
+          final response = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+          if(response.user != null){
+            Navigator.pop(context);
+            Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => Tabs()));
+          }
+          
       }catch(e){
-        print(e.message);
+          return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context){
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text('Error'),
+              content: Text(e),
+              elevation: 24.0,
+              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+            );
+          }
+        );
       }
 
       

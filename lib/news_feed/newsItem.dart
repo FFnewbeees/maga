@@ -8,20 +8,20 @@ class NewsItem extends StatelessWidget {
   final String thumbNail;
   final String title;
   final String date;
-  //final String description;
   final String author;
   final String content;
-  bool isFavourite;
+  final String url;
+  bool isFavourite = false;
 
   NewsItem({
     @required this.id, 
     @required this.thumbNail, 
     @required this.title, 
-   // @required this.description, 
     @required this.date, 
     @required this.author,
     @required this.content,
-    isFavourite = false
+    @required this.url,
+    this.isFavourite 
     });
   
   @override
@@ -43,7 +43,9 @@ class NewsItem extends StatelessWidget {
           'date': date, 
           'author': author, 
           'content': content, 
-          'isFavourite': isFavourite
+          'url':url,
+          'isFavourite': isFavourite,
+          
         }
       );
     }

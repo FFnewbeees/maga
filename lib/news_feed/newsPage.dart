@@ -56,7 +56,8 @@ class _NewsPageState extends State<NewsPage> {
                     title: data['webTitle'],
                     date: data['webPublicationDate'],
                     author: data['tags'][0]['webTitle'],
-                    content: data['fields']['body']
+                    content: data['fields']['body'],
+                    url:data['webUrl']
                   ));
               });
             _items = loadedNews;
@@ -95,6 +96,7 @@ class _NewsPageState extends State<NewsPage> {
                   date: _items[index].date, 
                   author: _items[index].author,
                   content: _items[index].content,
+                  url: _items[index].url,
                   );
               },
               itemCount: _items.length,
