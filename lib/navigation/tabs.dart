@@ -10,28 +10,60 @@ class Tabs extends StatefulWidget {
 }
 
 class _TabsState extends State<Tabs> {
-  List<Map<String, Object>> _pages = [];
+  final List<Widget> _pages = [
+    CameraScreen( key: PageStorageKey('scanner')),
+    NewsPage(key: PageStorageKey('news')),
+    ProfilePage(key: PageStorageKey('profile'))
+  ];
+
+  final PageStorageBucket bucket =PageStorageBucket();
+  int _selectedPageIndex = 0;
+
+  Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
+    onTap: (int index) => setState(()=>_selectedPageIndex = index),
+    backgroundColor: Theme.of(context).accentColor,
+    unselectedItemColor: Colors.white,
+    selectedItemColor: Colors.black,
+    currentIndex: selectedIndex,
+    type: BottomNavigationBarType.shifting,
+    items: const <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+            backgroundColor: Color.fromRGBO(59, 196, 185, 1),
+            icon: Icon(Icons.camera_enhance),
+            title: Text('Scanner'),
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Color.fromRGBO(59, 196, 185, 1),
+            icon: Icon(Icons.dashboard),
+            title: Text('News Feed'),
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Color.fromRGBO(59, 196, 185, 1),
+            icon: Icon(Icons.person),
+            title: Text('Profile'),
+          ),
+    ],
+  );
 
   @override
   void initState() {
-    _pages = [
-      {'page': CameraScreen(), 'title': 'Scanner'},
-      {'page': NewsPage(), 'title': 'News Feed'},
-      {'page': ProfilePage(), 'title': 'Profile'},
-    ];
+    // _pages = [
+    //   {'page': CameraScreen(), 'title': 'Scanner'},
+    //   {'page': NewsPage(), 'title': 'News Feed'},
+    //   {'page': ProfilePage(), 'title': 'Profile'},
+    // ];
 
     _welcomeMessage();
 
     super.initState();
   }
 
-  int _selectedPageIndex = 0;
 
-  void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
-  }
+  // void _selectPage(int index) {
+  //   setState(() {
+  //     _selectedPageIndex = index;
+  //   });
+  // }
 
   Future _welcomeMessage() async{
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -56,35 +88,36 @@ class _TabsState extends State<Tabs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_pages[_selectedPageIndex]['title']),
-      ),
-      body: _pages[_selectedPageIndex]['page'],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _selectPage,
-        backgroundColor: Theme.of(context).accentColor,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Colors.black,
-        currentIndex: _selectedPageIndex,
-        type: BottomNavigationBarType.shifting,
-        items: [
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).accentColor,
-            icon: Icon(Icons.camera_enhance),
-            title: Text('Scanner'),
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).accentColor,
-            icon: Icon(Icons.dashboard),
-            title: Text('News Feed'),
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).accentColor,
-            icon: Icon(Icons.person),
-            title: Text('Profile'),
-          ),
-        ],
-      ),
+      body: IndexedStack(
+        children: _pages,
+        index: _selectedPageIndex
+        ),
+      bottomNavigationBar: _bottomNavigationBar(_selectedPageIndex),
+      // BottomNavigationBar(
+      //   onTap: _selectPage,
+      //   backgroundColor: Theme.of(context).accentColor,
+      //   unselectedItemColor: Colors.white,
+      //   selectedItemColor: Colors.black,
+      //   currentIndex: _selectedPageIndex,
+      //   type: BottomNavigationBarType.shifting,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       backgroundColor: Theme.of(context).accentColor,
+      //       icon: Icon(Icons.camera_enhance),
+      //       title: Text('Scanner'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       backgroundColor: Theme.of(context).accentColor,
+      //       icon: Icon(Icons.dashboard),
+      //       title: Text('News Feed'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       backgroundColor: Theme.of(context).accentColor,
+      //       icon: Icon(Icons.person),
+      //       title: Text('Profile'),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

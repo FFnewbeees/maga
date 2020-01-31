@@ -9,6 +9,7 @@ import 'package:maga/loader/loader.dart';
 class NewsPage extends StatefulWidget {
   @override
   _NewsPageState createState() => _NewsPageState();
+  NewsPage({Key key}) : super(key: key);
 }
 
 class _NewsPageState extends State<NewsPage> {
@@ -19,7 +20,7 @@ class _NewsPageState extends State<NewsPage> {
   
   @override               
     void initState(){
-
+      print('object');
     super.initState();
       
     }
@@ -31,6 +32,7 @@ class _NewsPageState extends State<NewsPage> {
         setState(() {
           _isLoading = true;
         });
+
          //1. fetching api for news list
 
         Future<void> fetchNews() async{
@@ -85,7 +87,9 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      
+      appBar: AppBar(
+        title: Text('News Feed'),
+      ),
       body: _isLoading ? Loader() :
             ListView.builder(
               itemBuilder: (ctx,index) {

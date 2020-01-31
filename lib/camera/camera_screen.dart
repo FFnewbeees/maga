@@ -12,6 +12,7 @@ import 'package:maga/loader/loader.dart';
 class CameraScreen extends StatefulWidget {
   @override
   _CameraScreenState createState() => _CameraScreenState();
+   CameraScreen({Key key}) : super(key: key);
 }
 
 class _CameraScreenState extends State<CameraScreen> {
@@ -32,6 +33,9 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Scanner'),
+      ),
       body: showLoader
           ? Center(
               child: Loader(),
