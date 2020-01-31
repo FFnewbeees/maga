@@ -9,7 +9,10 @@ import './authentication/signIn.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  
+  Future<FirebaseUser> userGet() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    return user;
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,7 +25,11 @@ class MyApp extends StatelessWidget {
       //home: Tabs(),
       //initialRoute: '/',
       routes: {
-        '/': (ctx) => Tabs(),
+        // '/': (ctx) {
+        //   if(userGet() == null) return Login();
+        //   else return Tab();
+        // } ,
+        '/': (ctx)=>Login(),
         NewsDetail.routeName: (ctx) => NewsDetail(),
       },
     );

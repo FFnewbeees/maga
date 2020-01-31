@@ -1,15 +1,19 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:maga/authentication/signIn.dart';
 import 'package:maga/camera/pictureItem.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:maga/camera/result_screen.dart';
 import 'package:maga/loader/loader.dart';
 
 class CameraScreen extends StatefulWidget {
+  //inal FirebaseUser user;
+  //CameraScreen(this.user);
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
@@ -19,14 +23,99 @@ class _CameraScreenState extends State<CameraScreen> {
   List<ImageLabel> labels = [];
   bool showLoader = false;
   final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
-  Future user = FirebaseAuth.instance.currentUser();
+  FirebaseUser user;
+  Stream<QuerySnapshot> snapQuery;
   // FirebaseUser user = await FirebaseAuth.instance.currentUser();
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
-    // user.then(onValue)
+   // _getQurey();
+  }
+  @override
+  void dispose(){
+    super.dispose();
+    //Firestore.instance.
+    
+  }
+  Future<FirebaseUser> _getFirebaseUser() async {
+    user = await FirebaseAuth.instance.currentUser();
+    print("fkfkfkf  ${user.toString()}");
+    if (user == null) {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
+    }
+    return user;
+    
+  }
+  Future<void> _getQurey() async{
+     snapQuery = Firestore.instance
+        .collection('scanHistory')
+        .where('user', isEqualTo: await _getFirebaseUser())
+        .snapshots();
+  }
+
+  Widget streamBuilder() {
+    return StreamBuilder(
+      //initialData: Firestore.instance.collection('scanHistory') .where('user', isEqualTo: this.user.email).snapshots(),
+      stream: snapQuery,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return new Center(
+            child: Text("Error on streambuilder: ${snapshot.error.toString()}"),
+          );
+        }
+        if(snapshot.data == null){
+          snapQuery = Firestore.instance
+        .collection('scanHistory')
+        .where('user', isEqualTo: this.user.email)
+        .snapshots();
+          return new Loader();
+        }
+        else{
+          return ListView.builder(
+              itemBuilder: (ctx, index) {
+                return PictureItem(
+                    snapshot.data.documents[index]['imageurl'],
+                    snapshot.data.documents[index]['date'],
+                    snapshot.data.documents[index]['result_type']);
+              },
+              itemCount: snapshot.data.documents.length,
+            );
+        }
+        // switch (snapshot.connectionState) {
+        //   case ConnectionState.waiting:
+        //     return new Center(
+        //       child: Loader(),
+        //     );
+
+        //   case ConnectionState.none:
+        //     // TODO: Handle this case.
+            
+        //     return Center(
+        //       child: Text('none'),
+        //     );
+        //   case ConnectionState.active:
+        //     // TODO: Handle this case.
+
+        //     return ListView.builder(
+        //       itemBuilder: (ctx, index) {
+        //         return PictureItem(
+        //             snapshot.data.documents[index]['imageurl'],
+        //             snapshot.data.documents[index]['date'],
+        //             snapshot.data.documents[index]['result_type']);
+        //       },
+        //       itemCount: snapshot.data.documents.length,
+        //     );
+        //   case ConnectionState.done:
+        //     // TODO: Handle this case.
+        //     return Center(
+        //       child: Text('done'),
+        //     );
+        // }
+      },
+      
+    );
   }
 
   @override
@@ -36,12 +125,7 @@ class _CameraScreenState extends State<CameraScreen> {
           ? Center(
               child: Loader(),
             )
-          : ListView.builder(
-              itemBuilder: (ctx, index) {
-                return PictureItem();
-              },
-              itemCount: 1,
-            ),
+          : streamBuilder(),
       floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.camera_alt),
         onPressed: _cameraAction,
@@ -95,20 +179,21 @@ class _CameraScreenState extends State<CameraScreen> {
     } catch (e) {
       print(e);
       setState(() {
-      showLoader = false;
-    });
-    return;
+        showLoader = false;
+      });
+      return;
     }
     setState(() {
       showLoader = false;
     });
-    print("length of result "+labels.length.toString());
+    print("length of result " + labels.length.toString());
     for (ImageLabel label in labels) {
       print(label.confidence);
       print(label.entityId);
       print(label.text);
       print("----------------\n");
     }
-    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ResultScreen(false,labels,image)));
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => ResultScreen(false, labels, image)));
   }
 }

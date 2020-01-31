@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import './result_screen.dart';
 
 class PictureItem extends StatelessWidget {
-  
+  final imageUrl;
+  final date;
+  final result;
+  PictureItem(this.imageUrl,this.date,this.result);
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -19,8 +22,8 @@ class PictureItem extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15)),
-                  child: Image.asset(
-                    'assets/recycling.jpg',
+                  child: Image.network(
+                    imageUrl,
                     height: 200,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -41,7 +44,7 @@ class PictureItem extends StatelessWidget {
                       SizedBox(
                         width: 6,
                       ),
-                      Text('18/01/2020'),
+                      Text(date.toString()),
                     ],
                   ),
                   Row(
@@ -52,7 +55,7 @@ class PictureItem extends StatelessWidget {
                       SizedBox(
                         width: 6,
                       ),
-                      Text('recycle'),
+                      Text(result.toString()),
                     ],
                   ),
                 ],

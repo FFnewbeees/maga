@@ -22,6 +22,7 @@ class _ResultScreenState extends State<ResultScreen> {
   String comment = 'this item can not be recycled';
   // Future<FirebaseUser> user = FirebaseAuth.instance.currentUser();
   FirebaseAuth auth = FirebaseAuth.instance;
+  int result_type = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -35,16 +36,19 @@ class _ResultScreenState extends State<ResultScreen> {
       if (a == 1) {
         result = 'Recycle';
         comment = commentCheck(a);
+        result_type = a;
         break;
       }
       if (a == 2) {
         result = 'Booking collection';
         comment = commentCheck(a);
+        result_type = a;
         break;
       }
       if (a == 3) {
         result = 'E-waste booking collection';
         comment = commentCheck(a);
+        result_type = a;
         break;
       }
     }
@@ -77,7 +81,7 @@ class _ResultScreenState extends State<ResultScreen> {
         print('result screen save error : '+data);
       });
       var url = await storageReference.getDownloadURL();
-      await Firestore.instance.collection('scanHistory').document().setData({'user': user.email,'result':result,'comment':comment,'imageurl':url,'date':DateTime.now().toLocal()});
+      await Firestore.instance.collection('scanHistory').document().setData({'user': user.email,'result_type':result_type,'imageurl':url,'date':DateTime.now().toLocal()});
     } catch (e) {
       print('result screen save error1 : '+e.toString());
     }

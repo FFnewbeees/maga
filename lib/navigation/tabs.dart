@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:maga/authentication/signIn.dart';
 import '../camera/camera_screen.dart';
 import '../news_feed/newsPage.dart';
 import '../user_profile/profile.dart';
@@ -10,16 +12,36 @@ class Tabs extends StatefulWidget {
 
 class _TabsState extends State<Tabs> {
   List<Map<String, Object>> _pages = [];
-
+  FirebaseUser user;
   @override
   void initState() {
+    super.initState();
+
+    print("fkfkfkffkfkfk" + user.toString());
+    FirebaseAuth.instance.currentUser().then((user) {
+      if (user == null) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
+      }
+    });
     _pages = [
       {'page': CameraScreen(), 'title': 'Scanner'},
       {'page': NewsPage(), 'title': 'News Feed'},
       {'page': ProfilePage(), 'title': 'Profile'},
     ];
-    super.initState();
+    // if (user == null) {
+    //   Navigator.of(context)
+    //       .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
+    // }
   }
+
+  // Future getFirebaseUser() async {
+  //   user = await FirebaseAuth.instance.currentUser();
+  //   if (user == null) {
+  //     Navigator.of(context)
+  //         .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
+  //   }
+  // }
 
   int _selectedPageIndex = 0;
 
