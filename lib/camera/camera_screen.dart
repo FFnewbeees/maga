@@ -16,7 +16,7 @@ class CameraScreen extends StatefulWidget {
   //CameraScreen(this.user);
   @override
   _CameraScreenState createState() => _CameraScreenState();
-   CameraScreen({Key key}) : super(key: key);
+  CameraScreen({Key key}) : super(key: key);
 }
 
 class _CameraScreenState extends State<CameraScreen> {
@@ -26,55 +26,96 @@ class _CameraScreenState extends State<CameraScreen> {
   final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
   FirebaseUser user;
   Stream<QuerySnapshot> snapQuery;
+
   // FirebaseUser user = await FirebaseAuth.instance.currentUser();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-   // _getQurey();
+    _getQurey();
   }
+
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     //Firestore.instance.
-    
   }
-  Future<FirebaseUser> _getFirebaseUser() async {
-    user = await FirebaseAuth.instance.currentUser();
-    print("fkfkfkf  ${user.toString()}");
+
+  Future<String> _getFirebaseUser() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    this.user = user;
+    print("abcd  ${user.toString()}");
     if (user == null) {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
     }
-    return user;
-    
+    return user.email;
   }
-  Future<void> _getQurey() async{
-     snapQuery = Firestore.instance
+
+  Future<void> _getQurey() async {
+    // print(_getFirebaseUser().toString() + ".....fkfkfkfkfkfkfkfkkf");
+    final userPath = await _getFirebaseUser();
+    //this.user = userPath;
+    print(userPath + "  ...fkfkfk");
+    final response = Firestore.instance
         .collection('scanHistory')
-        .where('user', isEqualTo: await _getFirebaseUser())
+        .where('user', isEqualTo: userPath)
+        .orderBy('date', descending: true)
         .snapshots();
+
+    snapQuery = response;
   }
 
   Widget streamBuilder() {
     return StreamBuilder(
       //initialData: Firestore.instance.collection('scanHistory') .where('user', isEqualTo: this.user.email).snapshots(),
       stream: snapQuery,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           return new Center(
             child: Text("Error on streambuilder: ${snapshot.error.toString()}"),
           );
         }
-        if(snapshot.data == null){
-          snapQuery = Firestore.instance
-        .collection('scanHistory')
-        .where('user', isEqualTo: this.user.email)
-        .snapshots();
-          return new Loader();
-        }
-        else{
-          return ListView.builder(
+
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Loader();
+            break;
+          case ConnectionState.none:
+            print('connection none');
+            snapQuery = Firestore.instance
+                .collection('scanHistory')
+                .where('user', isEqualTo: user)
+                .orderBy('date', descending: true)
+                .snapshots();
+            return streamBuilder();
+            break;
+
+          case ConnectionState.active:
+            print('connection active');
+            if (!snapshot.hasData) {
+              print("fking hell");
+              return Loader();
+            }
+
+            return ListView.builder(
+              itemBuilder: (ctx, index) {
+                return PictureItem(
+                    snapshot.data.documents[index]['imageurl'],
+                    snapshot.data.documents[index]['date'] as Timestamp,
+                    snapshot.data.documents[index]['result_type']);
+              },
+              itemCount: snapshot.data.documents.length,
+            );
+            break;
+          case ConnectionState.done:
+            print('connection done');
+            if (!snapshot.hasData) {
+              print("fking hell");
+              return Loader();
+            }
+
+            return ListView.builder(
               itemBuilder: (ctx, index) {
                 return PictureItem(
                     snapshot.data.documents[index]['imageurl'],
@@ -83,39 +124,9 @@ class _CameraScreenState extends State<CameraScreen> {
               },
               itemCount: snapshot.data.documents.length,
             );
+            break;
         }
-        // switch (snapshot.connectionState) {
-        //   case ConnectionState.waiting:
-        //     return new Center(
-        //       child: Loader(),
-        //     );
-
-        //   case ConnectionState.none:
-        //     // TODO: Handle this case.
-            
-        //     return Center(
-        //       child: Text('none'),
-        //     );
-        //   case ConnectionState.active:
-        //     // TODO: Handle this case.
-
-        //     return ListView.builder(
-        //       itemBuilder: (ctx, index) {
-        //         return PictureItem(
-        //             snapshot.data.documents[index]['imageurl'],
-        //             snapshot.data.documents[index]['date'],
-        //             snapshot.data.documents[index]['result_type']);
-        //       },
-        //       itemCount: snapshot.data.documents.length,
-        //     );
-        //   case ConnectionState.done:
-        //     // TODO: Handle this case.
-        //     return Center(
-        //       child: Text('done'),
-        //     );
-        // }
       },
-      
     );
   }
 

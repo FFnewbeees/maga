@@ -11,7 +11,24 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  @override
+  void initState() {
+    super.initState();
+    // TODO: implement initState
+    print("enter login");
+    checkAuth();
+    
+  }
+  void checkAuth() async{
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    //final uid = user.email;
+    
+    if(user != null){
+       Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Tabs()));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
