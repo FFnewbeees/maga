@@ -35,14 +35,8 @@ class _CameraScreenState extends State<CameraScreen> {
     _getQurey();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    //Firestore.instance.
-  }
-
   Future<String> _getFirebaseUser() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+   final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     this.user = user;
     print("abcd  ${user.toString()}");
     if (user == null) {
@@ -52,54 +46,40 @@ class _CameraScreenState extends State<CameraScreen> {
     return user.email;
   }
 
-  Future<void> _getQurey() async {
+  void _getQurey() async {
     // print(_getFirebaseUser().toString() + ".....fkfkfkfkfkfkfkfkkf");
     final userPath = await _getFirebaseUser();
     //this.user = userPath;
     print(userPath + "  ...fkfkfk");
-    final response = Firestore.instance
+    snapQuery = Firestore.instance
         .collection('scanHistory')
         .where('user', isEqualTo: userPath)
         .orderBy('date', descending: true)
         .snapshots();
-
-    snapQuery = response;
   }
 
   Widget streamBuilder() {
     return StreamBuilder(
       //initialData: Firestore.instance.collection('scanHistory') .where('user', isEqualTo: this.user.email).snapshots(),
-      stream: snapQuery,
+      stream:  snapQuery = Firestore.instance
+                .collection('scanHistory')
+                .where('user', isEqualTo: user)
+                .orderBy('date', descending: true)
+                .snapshots(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        /// print(snapshot.data.documents.length);
         if (snapshot.hasError) {
           return new Center(
             child: Text("Error on streambuilder: ${snapshot.error.toString()}"),
           );
         }
-
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Loader();
-            break;
-          case ConnectionState.none:
-            print('connection none');
-            snapQuery = Firestore.instance
-                .collection('scanHistory')
-                .where('user', isEqualTo: user)
-                .orderBy('date', descending: true)
-                .snapshots();
-            return streamBuilder();
-            break;
-
-          case ConnectionState.active:
-            print('connection active');
-            if (!snapshot.hasData) {
-              print("fking hell");
-              return Loader();
-            }
-
-            return ListView.builder(
+        if(!snapshot.hasData){
+          return Loader();
+        }else{
+         // print(snapshot.data.documents.length);
+          return new ListView.builder(
               itemBuilder: (ctx, index) {
+               // print(index.toString());
                 return PictureItem(
                     snapshot.data.documents[index]['imageurl'],
                     snapshot.data.documents[index]['date'] as Timestamp,
@@ -107,25 +87,55 @@ class _CameraScreenState extends State<CameraScreen> {
               },
               itemCount: snapshot.data.documents.length,
             );
-            break;
-          case ConnectionState.done:
-            print('connection done');
-            if (!snapshot.hasData) {
-              print("fking hell");
-              return Loader();
-            }
-
-            return ListView.builder(
-              itemBuilder: (ctx, index) {
-                return PictureItem(
-                    snapshot.data.documents[index]['imageurl'],
-                    snapshot.data.documents[index]['date'],
-                    snapshot.data.documents[index]['result_type']);
-              },
-              itemCount: snapshot.data.documents.length,
-            );
-            break;
         }
+        //print(snapshot.requireData.documents.length);
+        // switch (snapshot.connectionState) {
+        //   case ConnectionState.waiting:
+        //     return Loader();
+        //     break;
+        //   case ConnectionState.none:
+        //     print('connection none');
+           
+        //     //return streamBuilder();
+        //     break;
+
+        //   case ConnectionState.active:
+        //     print('connection active');
+        //     if (!snapshot.hasData) {
+        //       print("fking hell");
+        //       return Loader();
+        //     }
+        //    // snapshot.data.document
+        //     //print();
+        //     return ListView.builder(
+             
+        //       itemBuilder: (ctx, index) {
+        //         return PictureItem(
+        //             snapshot.data.documents[index]['imageurl'],
+        //             snapshot.data.documents[index]['date'] as Timestamp,
+        //             snapshot.data.documents[index]['result_type']);
+        //       },
+        //       itemCount: snapshot.data.documents.length,
+        //     );
+        //     break;
+        //   case ConnectionState.done:
+        //     print('connection done');
+        //     if (!snapshot.hasData) {
+        //       print("fking hell");
+        //       return Loader();
+        //     }
+
+        //     return ListView.builder(
+        //       itemBuilder: (ctx, index) {
+        //         return PictureItem(
+        //             snapshot.data.documents[index]['imageurl'],
+        //             snapshot.data.documents[index]['date'],
+        //             snapshot.data.documents[index]['result_type']);
+        //       },
+        //       itemCount: snapshot.data.documents.length,
+        //     );
+        //     break;
+        // }
       },
     );
   }
@@ -208,7 +218,7 @@ class _CameraScreenState extends State<CameraScreen> {
       print(label.text);
       print("----------------\n");
     }
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => ResultScreen(false, labels, image)));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => ResultScreen(false, labels, image, null)));
   }
 }
