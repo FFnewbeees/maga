@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
     if(user != null){
        Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Tabs()));
+            MaterialPageRoute(builder: (context) => Tabs(user)));
     }
   }
   @override
@@ -189,7 +189,7 @@ class _LoginState extends State<Login> {
             Navigator.pop(context);
             Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Tabs()));
+            MaterialPageRoute(builder: (context) => Tabs(response.user)));
           }
           
       }catch(e){

@@ -6,6 +6,9 @@ import '../news_feed/newsPage.dart';
 import '../user_profile/profile.dart';
 
 class Tabs extends StatefulWidget {
+ 
+  final FirebaseUser user;
+  Tabs(this.user);
   @override
   _TabsState createState() => _TabsState();
 }
@@ -66,10 +69,9 @@ class _TabsState extends State<Tabs> {
   //   });
   // }
 
-  Future _welcomeMessage() async{
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final FirebaseUser user = await auth.currentUser();
-    if(user != null){
+  Future<void> _welcomeMessage() async{
+   
+    if(widget.user != null){
       return showDialog(
           context: context,
           barrierDismissible: true,
@@ -77,7 +79,7 @@ class _TabsState extends State<Tabs> {
             return AlertDialog(
               backgroundColor: Colors.white,
               title: Text('Message'),
-              content: Text('Welcome' + user.email),
+              content: Text('Welcome' + widget.user.email),
               elevation: 24.0,
               shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
             );

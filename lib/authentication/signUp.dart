@@ -165,7 +165,7 @@ class _SignUpState extends State<SignUp> {
               Navigator.pop(context);
               Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Tabs()));
+              MaterialPageRoute(builder: (context) => Tabs(response.user)));
             }
             
         }catch(e){

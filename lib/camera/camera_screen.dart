@@ -10,13 +10,15 @@ import 'package:maga/camera/pictureItem.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:maga/camera/result_screen.dart';
 import 'package:maga/loader/loader.dart';
-
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 class CameraScreen extends StatefulWidget {
   //inal FirebaseUser user;
   //CameraScreen(this.user);
+  final FirebaseUser user;
+  CameraScreen({Key key, this.user}) : super(key: key);
   @override
   _CameraScreenState createState() => _CameraScreenState();
-  CameraScreen({Key key}) : super(key: key);
 }
 
 class _CameraScreenState extends State<CameraScreen> {
@@ -35,25 +37,14 @@ class _CameraScreenState extends State<CameraScreen> {
     _getQurey();
   }
 
-  Future<String> _getFirebaseUser() async {
-   final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    this.user = user;
-    print("abcd  ${user.toString()}");
-    if (user == null) {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
-    }
-    return user.email;
-  }
-
   void _getQurey() async {
     // print(_getFirebaseUser().toString() + ".....fkfkfkfkfkfkfkfkkf");
-    final userPath = await _getFirebaseUser();
+    final userPath = await FirebaseAuth.instance.currentUser();
     //this.user = userPath;
-    print(userPath + "  ...fkfkfk");
+    //print(userPath + "  ...fkfkfk");
     snapQuery = Firestore.instance
         .collection('scanHistory')
-        .where('user', isEqualTo: userPath)
+        .where('user', isEqualTo: userPath.email)
         .orderBy('date', descending: true)
         .snapshots();
   }
@@ -61,11 +52,11 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget streamBuilder() {
     return StreamBuilder(
       //initialData: Firestore.instance.collection('scanHistory') .where('user', isEqualTo: this.user.email).snapshots(),
-      stream:  snapQuery = Firestore.instance
-                .collection('scanHistory')
-                .where('user', isEqualTo: user)
-                .orderBy('date', descending: true)
-                .snapshots(),
+      stream: snapQuery = Firestore.instance
+          .collection('scanHistory')
+          .where('user', isEqualTo: user)
+          .orderBy('date', descending: true)
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         /// print(snapshot.data.documents.length);
         if (snapshot.hasError) {
@@ -73,20 +64,22 @@ class _CameraScreenState extends State<CameraScreen> {
             child: Text("Error on streambuilder: ${snapshot.error.toString()}"),
           );
         }
-        if(!snapshot.hasData){
-          return Loader();
-        }else{
-         // print(snapshot.data.documents.length);
+        if (!snapshot.hasData) {
+          return new Loader();
+        } else {
+          // print(snapshot.data.documents.length);
           return new ListView.builder(
-              itemBuilder: (ctx, index) {
-               // print(index.toString());
-                return PictureItem(
-                    snapshot.data.documents[index]['imageurl'],
-                    snapshot.data.documents[index]['date'] as Timestamp,
-                    snapshot.data.documents[index]['result_type']);
-              },
-              itemCount: snapshot.data.documents.length,
-            );
+            itemExtent: 234,
+            cacheExtent: 10.0,
+            itemBuilder: (ctx, index) {
+              // print(index.toString());
+              return PictureItem(
+                  snapshot.data.documents[index]['imageurl'],
+                  snapshot.data.documents[index]['date'] as Timestamp,
+                  snapshot.data.documents[index]['result_type']);
+            },
+            itemCount: snapshot.data.documents.length,
+          );
         }
         //print(snapshot.requireData.documents.length);
         // switch (snapshot.connectionState) {
@@ -95,7 +88,7 @@ class _CameraScreenState extends State<CameraScreen> {
         //     break;
         //   case ConnectionState.none:
         //     print('connection none');
-           
+
         //     //return streamBuilder();
         //     break;
 
@@ -108,7 +101,7 @@ class _CameraScreenState extends State<CameraScreen> {
         //    // snapshot.data.document
         //     //print();
         //     return ListView.builder(
-             
+
         //       itemBuilder: (ctx, index) {
         //         return PictureItem(
         //             snapshot.data.documents[index]['imageurl'],
@@ -192,15 +185,24 @@ class _CameraScreenState extends State<CameraScreen> {
           );
         });
   }
-
+  var targetPath;
+  void getFileimage() async{
+    final dir = await path_provider.getTemporaryDirectory();
+    targetPath = dir.absolute.path + '/temp.jpg';
+  } 
+  
   void _getImage(BuildContext context, ImageSource imageSource) async {
+    var compressedFile;
     setState(() {
       showLoader = true;
     });
     try {
       image = await ImagePicker.pickImage(source: imageSource);
+      await getFileimage();
       labels =
           await cloudLabeler.processImage(FirebaseVisionImage.fromFile(image));
+      compressedFile = await FlutterImageCompress.compressAndGetFile(
+      image.absolute.path, targetPath ,quality: 40);
     } catch (e) {
       print(e);
       setState(() {
@@ -219,6 +221,6 @@ class _CameraScreenState extends State<CameraScreen> {
       print("----------------\n");
     }
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => ResultScreen(false, labels, image, null)));
+        builder: (_) => ResultScreen(labels, compressedFile)));
   }
 }

@@ -10,11 +10,11 @@ import 'package:maga/camera/labelCheck.dart';
 import 'package:maga/camera/recycleModel.dart';
 
 class ResultScreen extends StatefulWidget {
-  final bool iconCheck;
+  //final bool iconCheck;
   final List<ImageLabel> labels;
-  final File imageFile ;
-  final int resultType ;
-  ResultScreen(this.iconCheck, this.labels, this.imageFile,this.resultType);
+  final File imageFile;
+
+  ResultScreen(this.labels, this.imageFile);
   //ResultScreen(this.iconCheck,);
   @override
   _ResultScreenState createState() => _ResultScreenState();
@@ -30,36 +30,30 @@ class _ResultScreenState extends State<ResultScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.iconCheck == false) {
-      for (ImageLabel label in widget.labels) {
-        //label.text
-        int a = LabelCheck().check(label.text);
-        if (a == 0) {
-          continue;
-        }
-        if (a == 1) {
-          result = RecycleModel().displayHistory[a];
-          comment = RecycleModel().commentCheck(a);
-          result_type = a;
-          break;
-        }
-        if (a == 2) {
-          result = RecycleModel().displayHistory[a];
-          comment = RecycleModel().commentCheck(a);
-          result_type = a;
-          break;
-        }
-        if (a == 3) {
-          result = RecycleModel().displayHistory[a];
-          comment = RecycleModel().commentCheck(a);
-          result_type = a;
-          break;
-        }
+    for (ImageLabel label in widget.labels) {
+      //label.text
+      int a = LabelCheck().check(label.text);
+      if (a == 0) {
+        continue;
       }
-    }else{
-      result = RecycleModel().displayHistory[widget.resultType];
-      comment = RecycleModel().commentCheck(widget.resultType);
-
+      if (a == 1) {
+        result = RecycleModel().displayHistory[a];
+        comment = RecycleModel().commentCheck(a);
+        result_type = a;
+        break;
+      }
+      if (a == 2) {
+        result = RecycleModel().displayHistory[a];
+        comment = RecycleModel().commentCheck(a);
+        result_type = a;
+        break;
+      }
+      if (a == 3) {
+        result = RecycleModel().displayHistory[a];
+        comment = RecycleModel().commentCheck(a);
+        result_type = a;
+        break;
+      }
     }
   }
 
@@ -80,7 +74,7 @@ class _ResultScreenState extends State<ResultScreen> {
   // }
 
   void delete() {}
-  Future save() async {
+   save() async {
     try {
       FirebaseUser user = await auth.currentUser();
       StorageReference storageReference = FirebaseStorage()
@@ -113,18 +107,13 @@ class _ResultScreenState extends State<ResultScreen> {
           centerTitle: true,
           title: Text('Result'),
           actions: <Widget>[
-            widget.iconCheck
-                ? IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {},
-                  )
-                : IconButton(
-                    icon: Icon(Icons.save),
-                    onPressed: () {
-                      //CircularProgressIndicator();
-                      save();
-                    },
-                  ),
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () {
+                //CircularProgressIndicator();
+                save();
+              },
+            ),
           ],
         ),
         body: SingleChildScrollView(

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:maga/loader/splash_screen.dart';
 import '././news_feed/newsDetail.dart';
 import './navigation/tabs.dart';
 import './authentication/signIn.dart';
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> {
       //home: buildState,
       //initialRoute: '/',
       routes: {
-        '/': (ctx) => Login(),
+        '/': (ctx) => SplashScren(),
         NewsDetail.routeName: (ctx) => NewsDetail(),
       },
     );

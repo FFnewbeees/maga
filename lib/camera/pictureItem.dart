@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:maga/camera/recycleModel.dart';
 import './result_screen.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class PictureItem extends StatelessWidget {
   final imageUrl;
@@ -18,7 +19,7 @@ class PictureItem extends StatelessWidget {
   Widget build(BuildContext context) {
     //print(date.toDate());
     return InkWell(
-     onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen(true,null,imageUrl,result))),
+      //onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen(true,null,,imageUrl,result))),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 4,
@@ -31,17 +32,24 @@ class PictureItem extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15)),
-                  child: Image.network(
-                    imageUrl,
-                    height: 200,
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: imageUrl,
+                    height: 160,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    // Image.network(
+                    //   imageUrl,
+                    //   height: 160,
+                    //   width: double.infinity,
+                    //   fit: BoxFit.cover,
+                    // ),
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
