@@ -1,12 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:maga/camera/recycleModel.dart';
 import './result_screen.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class PictureItem extends StatelessWidget {
-  
+  final imageUrl;
+  final date;
+  final result;
+  final dateFormat = DateFormat('yyyy-MM-dd');
+  PictureItem(this.imageUrl, this.date, this.result);
+  String resultDisplay(int result) {
+    return RecycleModel().displayHistory[result];
+  }
+
   @override
   Widget build(BuildContext context) {
+    //print(date.toDate());
     return InkWell(
-      //onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen())),
+      //onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen(true,null,,imageUrl,result))),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 4,
@@ -19,19 +32,26 @@ class PictureItem extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15)),
-                  child: Image.asset(
-                    'assets/recycling.jpg',
-                    height: 200,
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: imageUrl,
+                    height: 160,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    // Image.network(
+                    //   imageUrl,
+                    //   height: 160,
+                    //   width: double.infinity,
+                    //   fit: BoxFit.cover,
+                    // ),
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(15),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Row(
                     children: <Widget>[
@@ -41,18 +61,24 @@ class PictureItem extends StatelessWidget {
                       SizedBox(
                         width: 6,
                       ),
-                      Text('18/01/2020'),
+                      Text(dateFormat.format(date.toDate())),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      Icon(
-                        Icons.done_outline,
-                      ),
+                      result == 0
+                          ? Icon(
+                              Icons.thumb_down,
+                              color: Colors.red,
+                            )
+                          : Icon(
+                              Icons.thumb_up,
+                              color: Colors.green,
+                            ),
                       SizedBox(
                         width: 6,
                       ),
-                      Text('recycle'),
+                      Text(resultDisplay(result)),
                     ],
                   ),
                 ],

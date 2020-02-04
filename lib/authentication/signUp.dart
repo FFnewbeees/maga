@@ -136,7 +136,7 @@ class _SignUpState extends State<SignUp> {
                     textColor: Colors.white70,
                     child: Text("Already Have Account?".toUpperCase()),
                     onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(
+                      Navigator.pushReplacement(context, MaterialPageRoute(
                       builder: (context) => Login(),
                       ));  
                     }
@@ -167,7 +167,7 @@ class _SignUpState extends State<SignUp> {
               Navigator.pop(context);
               Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Tabs()));
+              MaterialPageRoute(builder: (context) => Tabs(response.user)));
             }
             
         }catch(e){
