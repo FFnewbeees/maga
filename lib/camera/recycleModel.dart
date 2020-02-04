@@ -1,6 +1,7 @@
 enum RecycleBool{
   recycle,
-  concile
+  council,
+  norecycle,
 }
 class RecycleModel{
 
