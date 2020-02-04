@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       //home: Tabs(),
       //initialRoute: '/',
       routes: {
-        '/': (ctx) => Tabs(),
+        '/': (ctx) => Login(),
         NewsDetail.routeName: (ctx) => NewsDetail(),
       },
     );

@@ -8,6 +8,7 @@ class News {
   final String author;
   final String content;
   final String url;
+  final String user;
   bool isFavourite = false;
 
   News({
@@ -18,6 +19,7 @@ class News {
     @required this.author,
     @required this.content,
     @required this.url,
+    @required this.user,
     this.isFavourite 
   });
 

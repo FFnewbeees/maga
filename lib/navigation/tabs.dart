@@ -76,7 +76,7 @@ class _TabsState extends State<Tabs> {
             return AlertDialog(
               backgroundColor: Colors.white,
               title: Text('Message'),
-              content: Text('Welcome' + user.email),
+              content: Text('Welcome' + "  "+ user.email),
               elevation: 24.0,
               shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
             );

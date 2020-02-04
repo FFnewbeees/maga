@@ -16,19 +16,34 @@ class NewsDetail extends StatefulWidget {
 
 class _NewsDetailState extends State<NewsDetail> {
   final dateFormat = DateFormat('yyyy-MM-dd');
-  bool isFavourite = false;
-  
+  bool isFavourite ;
+  String currentNewsId;
+  var imageUrl ;
+    var title ;
+    var date ;
+    var author ;
+    var content ;
+    var url ;
+    var user ;
+    // bool isFavourite ;
+    var a =0;
+
   @override
   Widget build(BuildContext context) {
-
-    final routeArgs = ModalRoute.of(context).settings.arguments as Map<dynamic, dynamic>;
-    final imageUrl = routeArgs['thumbNail'];
-    final title = routeArgs['title'];
-    final date = routeArgs['date'];
-    final author = routeArgs['author'];
-    final content = routeArgs['content'];
-    final url = routeArgs['url'];
-    //bool isFavourite = false;
+    if(a==0)
+    {
+      final routeArgs = ModalRoute.of(context).settings.arguments as Map<dynamic, dynamic>;
+      currentNewsId = routeArgs['id'];
+      imageUrl = routeArgs['thumbNail'];
+      title = routeArgs['title'];
+      date = routeArgs['date'];
+      author = routeArgs['author'];
+      content = routeArgs['content'];
+      url = routeArgs['url'];
+      user = routeArgs['user'];
+      isFavourite = routeArgs['isFavourite'];
+      a++;
+    }
 
       openBottomSheet(context){
       showModalBottomSheet(
@@ -37,34 +52,33 @@ class _NewsDetailState extends State<NewsDetail> {
         );
     }
     
-    void saveAsFavourite() async{
     
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final FirebaseUser user = await auth.currentUser();
-    final uid = user.uid;
+  //todo: delete from fav
+  //todo: check from database to see if it is fav
 
-    final CollectionReference collectionRef = Firestore.instance.collection('users');
-    final postRef = collectionRef.document(uid);
+
+void saveAsFavourite() async {
+
+    final CollectionReference collectionRef = Firestore.instance.collection('favouriteNews');
 
     try{
 
       var data = {
+        'id':currentNewsId,
         'thumbNail': imageUrl,
         'title': title,
         'date': date,
         'author': author,
         'content': content,
         'url': url,
+        'user': user,
         'isFavourite': isFavourite = true
     };
 
-      await postRef.updateData({
-        "favNews" : FieldValue.arrayUnion([data])
-      });
-       setState(() {
-          isFavourite = true;
-        });
-
+      await collectionRef.document().setData(data);
+      
+      
+      print(isFavourite);
         return showDialog(
           context: context,
           barrierDismissible: true,
@@ -96,6 +110,7 @@ class _NewsDetailState extends State<NewsDetail> {
         );
     }
   }
+
    
     return Scaffold(
       appBar: AppBar(
@@ -118,13 +133,20 @@ class _NewsDetailState extends State<NewsDetail> {
               openBottomSheet(context);
             },
           ),
-    
+          isFavourite?
           IconButton(
-            icon: isFavourite ? Icon(Icons.favorite,color: Colors.red,) : Icon(Icons.favorite_border),
+            icon:Icon(Icons.favorite,color: Colors.red,),
             onPressed: (){
-               saveAsFavourite();
+              
             },
-          ),
+          ) : IconButton(icon: Icon(Icons.favorite_border), onPressed: (){
+               saveAsFavourite();
+                setState(() {
+                print('set to favourte');
+                print(isFavourite);
+                isFavourite = true;
+        });
+            },)
     
         ],
       ),
