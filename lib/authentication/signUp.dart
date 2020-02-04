@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:maga/authentication/signIn.dart';
@@ -162,6 +163,7 @@ class _SignUpState extends State<SignUp> {
             final response = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
             if(response.user != null)
             {
+              
               Navigator.pop(context);
               Navigator.pushReplacement(
               context,

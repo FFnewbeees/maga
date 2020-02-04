@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'newsDetail.dart';
 
-class NewsItem extends StatelessWidget {
+class NewsItem extends StatefulWidget {
 
   final String id;
   final String thumbNail;
@@ -11,7 +13,8 @@ class NewsItem extends StatelessWidget {
   final String author;
   final String content;
   final String url;
-  bool isFavourite = false;
+  final String user;
+  //bool isFavourite = false;
 
   NewsItem({
     @required this.id, 
@@ -21,9 +24,84 @@ class NewsItem extends StatelessWidget {
     @required this.author,
     @required this.content,
     @required this.url,
-    this.isFavourite 
+    @required this.user,
+    //this.isFavourite 
     });
+
+  @override
+  _NewsItemState createState() => _NewsItemState();
+}
+
+class _NewsItemState extends State<NewsItem> {
+  bool isFavourite = false;
+
+@override
+  void initState() {
+    //checkFavourite();
+    super.initState();
+
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    
+  }
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    //checkFavourite();
+  }
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    checkFavourite();
+  }
   
+  void checkFavourite() async {
+
+    //check user id
+    final FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+
+    //check news id
+    final response = await Firestore.instance
+    .collection('favouriteNews')
+    .where('user', isEqualTo: currentUser.email)
+    .where('id', isEqualTo: widget.id)
+    .getDocuments();
+
+    //print(response.documents);
+
+    if(response.documents.length != 0){
+        isFavourite = true;
+        print('it is a favourite item $isFavourite');
+        return;
+    }
+
+      isFavourite = false;
+  }
+
+  void selectNews(BuildContext context){
+      //checkFavourite();
+      print(isFavourite.toString()+"newsitem");
+      Navigator.of(context).pushNamed(
+        NewsDetail.routeName, 
+        arguments: {
+          'id':widget.id,
+          'thumbNail': widget.thumbNail, 
+          'title': widget.title, 
+          'date': widget.date, 
+          'author': widget.author, 
+          'content': widget.content, 
+          'url':widget.url,
+          'isFavourite': isFavourite,
+          'user':widget.user
+          
+        }
+      );
+    }
   @override
   Widget build(BuildContext context) {
 
@@ -34,28 +112,15 @@ class NewsItem extends StatelessWidget {
 
     final dateFormat = DateFormat('yyyy-MM-dd');
 
-    void selectNews(BuildContext context){
-      Navigator.of(context).pushNamed(
-        NewsDetail.routeName, 
-        arguments: {
-          'thumbNail': thumbNail, 
-          'title': title, 
-          'date': date, 
-          'author': author, 
-          'content': content, 
-          'url':url,
-          'isFavourite': isFavourite,
-          
-        }
-      );
-    }
+    
 
     return InkWell(
-          onTap: () => selectNews(context),
+          onTap: () { checkFavourite() ;selectNews(context);},
           splashColor: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(10.0),
           child: Card(
                   elevation: 4.0,
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -68,12 +133,12 @@ class NewsItem extends StatelessWidget {
                                   topLeft: Radius.circular(10.0),
                                   topRight: Radius.circular(10.0),
                                 ),
-                              child:Image.network(thumbNail, fit: BoxFit.cover, width: double.infinity, height: 200.0,),  
+                              child:Image.network(widget.thumbNail, fit: BoxFit.cover, width: double.infinity, height: 200.0,),  
                             ),
                             Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Text(
-                                title,
+                                widget.title,
                                 style: titleTextStyle,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
@@ -84,7 +149,7 @@ class NewsItem extends StatelessWidget {
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                    dateFormat.format(DateTime.parse(date)) ,
+                                    dateFormat.format(DateTime.parse(widget.date)) ,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 14.0,
@@ -92,7 +157,7 @@ class NewsItem extends StatelessWidget {
                                   ),
                                   Spacer(),
                                   Text(  
-                                    author,
+                                    widget.author,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(

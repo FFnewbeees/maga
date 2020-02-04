@@ -1,28 +1,49 @@
-import 'dart:ffi';
 
+import '../loader/loader.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:maga/user_profile/favNewsItem.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
 
-  final List<Map> collections = [
-    {
-      "title":"Some Recycle News",
-      "image": "assets/recycling.jpg",
-    },
-    {
-      "title":"Some Tips",
-      "image":"assets/recycling.jpg",
-    },
-    {
-      "title":"Some random News",
-      "image":"assets/recycling.jpg",
-    },
-    {
-      "title":"Some thing",
-      "image":"assets/recycling.jpg",
-    },
-  ];
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+
+  List<FavNewsItem> collections = [];
+  bool _isLoading = false;
+ // bool _isInit = true;
+  String currentUser;
+
+  Stream<QuerySnapshot> querySnapshot;
+
+  @override               
+    void initState(){
+    super.initState();
+    getQuery();
+      
+  }
+
+  void getQuery() async{
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseUser user = await auth.currentUser();
+    currentUser = user.email;
+    
+    querySnapshot = Firestore.instance
+    .collection('favouriteNews')
+    .where('user', isEqualTo:currentUser)
+    .orderBy('date', descending: true)
+    .snapshots();
+
+    print('got data');
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,27 +73,18 @@ class ProfilePage extends StatelessWidget {
   Widget _mainListBuilder(BuildContext context, int index){
     if(index==0) return _buildHeader(context);
     if(index==1) return _buildSectionHeader(context);
-    if(index==2) return _buildCollectionsRow();
+    if(index==2) return _isLoading ? Center(child: Loader()) :  
+              Container(
+                color: Colors.white,
+                height: 340.0,
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child:_buildCollectionsRow()
+              );
     if(index==3) return Container(
       color: Colors.white,
       padding: EdgeInsets.only(left: 20.0, top: 20.0, bottom: 10.0),
-      // child: Text("Most liked posts",
-      //   style: Theme.of(context).textTheme.title
-      // )
     );
-    // return _buildListItem();
   }
-
-  // Widget _buildListItem(){
-  //   return Container(
-  //     color: Colors.white,
-  //     padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-  //     child: ClipRRect(
-  //       borderRadius: BorderRadius.circular(5.0),
-  //       child: Image.asset('assets/recycling.jpg', fit: BoxFit.cover),
-  //     ),
-  //   );
-  // }
 
   Widget _buildSectionHeader(BuildContext context){
     return Container(
@@ -89,35 +101,42 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _buildCollectionsRow(){
-    return Container(
-      color: Colors.white,
-      height: 340.0,
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        itemCount:collections.length,
-        itemBuilder: (BuildContext context, int index){
-          return Container(
-            margin:EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-            width: 300.0,
-            height: 250.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.asset('assets/recycling.jpg', fit: BoxFit.cover),
-                  )
-                ),
-                SizedBox(height: 5.0),
-                Text(collections[index]['title'], style: Theme.of(context).textTheme.subhead.merge(TextStyle(color: Colors.grey.shade600)))
-              ],
-            ),
-          );
-        },
-      ),
+    return StreamBuilder(
+      stream: querySnapshot = Firestore.instance
+    .collection('favouriteNews')
+    .where('user', isEqualTo:currentUser)
+    .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if(snapshot.hasError){
+          return new Center(
+            child: Text('Error on streamBuilder : ${snapshot.error.toString()}'),
+            );
+        }
+
+        if(!snapshot.hasData){
+          return Center(
+            child: Text('Your News Collection is empty'),
+            );
+        }else{
+          return new ListView.builder(
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (ctx, index){
+            return FavNewsItem(
+                      snapshot.data.documents[index]['id'],
+                      snapshot.data.documents[index]['thumbNail'],
+                      snapshot.data.documents[index]['title'],
+                      snapshot.data.documents[index]['date'],
+                      snapshot.data.documents[index]['author'],
+                      snapshot.data.documents[index]['content'],
+                      snapshot.data.documents[index]['url'],
+                      snapshot.data.documents[index]['user'],
+                      snapshot.data.documents[index]['isFavourite'],
+                    );
+          });
+        }
+      }
     );
   }
 
