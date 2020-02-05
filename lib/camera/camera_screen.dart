@@ -27,7 +27,7 @@ class _CameraScreenState extends State<CameraScreen> {
   List<ImageLabel> labels = [];
   bool showLoader = false;
   final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
-  FirebaseUser user;
+  //FirebaseUser user;
   Stream<QuerySnapshot> snapQuery;
 
   // FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -53,7 +53,7 @@ class _CameraScreenState extends State<CameraScreen> {
       //initialData: Firestore.instance.collection('scanHistory') .where('user', isEqualTo: this.user.email).snapshots(),
       stream: snapQuery = Firestore.instance
           .collection('scanHistory')
-          .where('user', isEqualTo: user)
+          .where('user', isEqualTo: widget.user.email)
           .orderBy('date', descending: true)
           .snapshots(),
         
