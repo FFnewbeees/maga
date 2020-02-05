@@ -12,6 +12,7 @@ import 'package:maga/camera/result_screen.dart';
 import 'package:maga/loader/loader.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+
 class CameraScreen extends StatefulWidget {
   //inal FirebaseUser user;
   //CameraScreen(this.user);
@@ -36,7 +37,7 @@ class _CameraScreenState extends State<CameraScreen> {
     // TODO: implement initState
     super.initState();
     _getQurey();
-   // print();
+    // print();
   }
 
   void _getQurey() {
@@ -46,7 +47,16 @@ class _CameraScreenState extends State<CameraScreen> {
         .orderBy('date', descending: true)
         .snapshots();
 
-      // Firestore.instance.collection('').where('').getDocuments()
+    // Firestore.instance.collection('').where('').getDocuments()
+  }
+
+  Widget nodata() {
+    return Center(
+        child: new Image.asset(
+      'assets/nodata.png',
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.height * 0.8,
+    ));
   }
 
   Widget streamBuilder() {
@@ -57,7 +67,7 @@ class _CameraScreenState extends State<CameraScreen> {
           .where('user', isEqualTo: widget.user.email)
           .orderBy('date', descending: true)
           .snapshots(),
-        
+
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         /// print(snapshot.data.documents.length);
         if (snapshot.hasError) {
@@ -65,35 +75,33 @@ class _CameraScreenState extends State<CameraScreen> {
             child: Text("Error on streambuilder: ${snapshot.error.toString()}"),
           );
         }
-        if(!snapshot.hasData) {
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return new Center(child: Text("No data Scann one"),);
+        if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return nodata();
           }
           return new Loader();
         } else {
           // print(snapshot.data.documents.length);
-           //print(snapshot.connectionState.toString());
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return new Center(child: Text("No data Scann one"),);
+          //print(snapshot.connectionState.toString());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return nodata();
           }
-          
+
           return new ListView.builder(
             itemExtent: 234,
-            cacheExtent: 100.0,
+            //cacheExtent: 100.0,
             addAutomaticKeepAlives: true,
             itemBuilder: (ctx, index) {
-            //  print(snapshot.data.documents[index].documentID);
+              //  print(snapshot.data.documents[index].documentID);
               return PictureItem(
                   snapshot.data.documents[index]['imageurl'],
                   snapshot.data.documents[index]['date'] as Timestamp,
                   snapshot.data.documents[index]['result_type'],
                   snapshot.data.documents[index].documentID,
-                  widget.user
-              );
+                  widget.user);
             },
             itemCount: snapshot.data.documents.length,
           );
-          
         }
       },
     );
@@ -151,12 +159,13 @@ class _CameraScreenState extends State<CameraScreen> {
           );
         });
   }
+
   var targetPath;
-  void getFileimage() async{
+  void getFileimage() async {
     final dir = await path_provider.getTemporaryDirectory();
     targetPath = dir.absolute.path + '/temp.jpg';
-  } 
-  
+  }
+
   void _getImage(BuildContext context, ImageSource imageSource) async {
     var compressedFile;
     setState(() {
@@ -168,7 +177,8 @@ class _CameraScreenState extends State<CameraScreen> {
       labels =
           await cloudLabeler.processImage(FirebaseVisionImage.fromFile(image));
       compressedFile = await FlutterImageCompress.compressAndGetFile(
-      image.absolute.path, targetPath ,quality: 40);
+          image.absolute.path, targetPath,
+          quality: 40);
     } catch (e) {
       print(e);
       setState(() {
@@ -187,6 +197,7 @@ class _CameraScreenState extends State<CameraScreen> {
       print("----------------\n");
     }
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => ResultScreen(false,labels, compressedFile,targetPath.toString(),0,null,widget.user)));
+        builder: (_) => ResultScreen(false, labels, compressedFile,
+            targetPath.toString(), 0, null, widget.user)));
   }
 }

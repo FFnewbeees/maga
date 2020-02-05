@@ -87,9 +87,10 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void dialogYes() async {
-    print(widget.documentID);
-    print(widget.user.email);
-    var tmp = await Firestore.instance.collection('sancHistory').document(widget.documentID).get();
+  // print(widget.documentID);
+   // print(widget.user.email);
+    var tmp = await Firestore.instance.collection('scanHistory').document(widget.documentID).get();
+    //print(tmp.data);
     StorageReference storageReference = await FirebaseStorage().getReferenceFromUrl(tmp.data['imageurl']);
     storageReference.delete();
     await Firestore.instance
