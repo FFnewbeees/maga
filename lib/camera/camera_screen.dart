@@ -16,7 +16,8 @@ class CameraScreen extends StatefulWidget {
   //inal FirebaseUser user;
   //CameraScreen(this.user);
   final FirebaseUser user;
-  CameraScreen({Key key, this.user}) : super(key: key);
+  CameraScreen(this.user);
+
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
@@ -37,16 +38,14 @@ class _CameraScreenState extends State<CameraScreen> {
     _getQurey();
   }
 
-  void _getQurey() async {
-    // print(_getFirebaseUser().toString() + ".....fkfkfkfkfkfkfkfkkf");
-    final userPath = await FirebaseAuth.instance.currentUser();
-    //this.user = userPath;
-    //print(userPath + "  ...fkfkfk");
+  void _getQurey() {
     snapQuery = Firestore.instance
         .collection('scanHistory')
-        .where('user', isEqualTo: userPath.email)
+        .where('user', isEqualTo: widget.user.email)
         .orderBy('date', descending: true)
         .snapshots();
+
+      // Firestore.instance.collection('').where('').getDocuments()
   }
 
   Widget streamBuilder() {
@@ -57,6 +56,7 @@ class _CameraScreenState extends State<CameraScreen> {
           .where('user', isEqualTo: user)
           .orderBy('date', descending: true)
           .snapshots(),
+        
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         /// print(snapshot.data.documents.length);
         if (snapshot.hasError) {
@@ -70,13 +70,17 @@ class _CameraScreenState extends State<CameraScreen> {
           // print(snapshot.data.documents.length);
           return new ListView.builder(
             itemExtent: 234,
-            cacheExtent: 10.0,
+            cacheExtent: 100.0,
+            addAutomaticKeepAlives: true,
             itemBuilder: (ctx, index) {
-              // print(index.toString());
+            //  print(snapshot.data.documents[index].documentID);
               return PictureItem(
                   snapshot.data.documents[index]['imageurl'],
                   snapshot.data.documents[index]['date'] as Timestamp,
-                  snapshot.data.documents[index]['result_type']);
+                  snapshot.data.documents[index]['result_type'],
+                  snapshot.data.documents[index].documentID,
+                  widget.user
+              );
             },
             itemCount: snapshot.data.documents.length,
           );
@@ -221,6 +225,6 @@ class _CameraScreenState extends State<CameraScreen> {
       print("----------------\n");
     }
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => ResultScreen(labels, compressedFile)));
+        builder: (_) => ResultScreen(false,labels, compressedFile,targetPath.toString(),0,null,widget.user)));
   }
 }

@@ -6,7 +6,6 @@ import '../news_feed/newsPage.dart';
 import '../user_profile/profile.dart';
 
 class Tabs extends StatefulWidget {
- 
   final FirebaseUser user;
   Tabs(this.user);
   @override
@@ -14,24 +13,25 @@ class Tabs extends StatefulWidget {
 }
 
 class _TabsState extends State<Tabs> {
-  final List<Widget> _pages = [
-    CameraScreen( key: PageStorageKey('scanner')),
-    NewsPage(key: PageStorageKey('news')),
-    ProfilePage(key: PageStorageKey('profile'))
+  //final user = widget.user;
+  List<Widget> _pages = [
+    // CameraScreen(),
+    // NewsPage(widget.user),
+    // ProfilePage(widget.user)
   ];
 
-  final PageStorageBucket bucket =PageStorageBucket();
+  //final PageStorageBucket bucket =PageStorageBucket();
   int _selectedPageIndex = 0;
 
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
-    onTap: (int index) => setState(()=>_selectedPageIndex = index),
-    backgroundColor: Theme.of(context).accentColor,
-    unselectedItemColor: Colors.white,
-    selectedItemColor: Colors.black,
-    currentIndex: selectedIndex,
-    type: BottomNavigationBarType.shifting,
-    items: const <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
+        onTap: (int index) => setState(() => _selectedPageIndex = index),
+        backgroundColor: Theme.of(context).accentColor,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.black,
+        currentIndex: selectedIndex,
+        type: BottomNavigationBarType.shifting,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
             backgroundColor: Color.fromRGBO(59, 196, 185, 1),
             icon: Icon(Icons.camera_enhance),
             title: Text('Scanner'),
@@ -46,57 +46,47 @@ class _TabsState extends State<Tabs> {
             icon: Icon(Icons.person),
             title: Text('Profile'),
           ),
-    ],
-  );
+        ],
+      );
 
   @override
   void initState() {
-    // _pages = [
-    //   {'page': CameraScreen(), 'title': 'Scanner'},
-    //   {'page': NewsPage(), 'title': 'News Feed'},
-    //   {'page': ProfilePage(), 'title': 'Profile'},
-    // ];
+    _pages = [
+      CameraScreen(widget.user),
+      NewsPage(widget.user),
+      ProfilePage(widget.user)
+    ];
 
     _welcomeMessage();
 
     super.initState();
   }
 
-
-  // void _selectPage(int index) {
-  //   setState(() {
-  //     _selectedPageIndex = index;
-  //   });
-  // }
-
-  Future<void> _welcomeMessage() async{
-   
-    if(widget.user != null){
+  Future<void> _welcomeMessage() async {
+    if (widget.user != null) {
       return showDialog(
           context: context,
           barrierDismissible: true,
-          builder: (BuildContext context){
+          builder: (BuildContext context) {
             return AlertDialog(
               backgroundColor: Colors.white,
               title: Text('Message'),
               content: Text('Welcome' + widget.user.email),
               elevation: 24.0,
-              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             );
-          }
-        );
-    }else{
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Login()));
+          });
+    } else {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => Login()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        children: _pages,
-        index: _selectedPageIndex
-        ),
+      body: IndexedStack(children: _pages, index: _selectedPageIndex),
       bottomNavigationBar: _bottomNavigationBar(_selectedPageIndex),
       // BottomNavigationBar(
       //   onTap: _selectPage,

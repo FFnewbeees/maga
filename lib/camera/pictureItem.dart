@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:maga/camera/recycleModel.dart';
@@ -10,7 +13,9 @@ class PictureItem extends StatelessWidget {
   final date;
   final result;
   final dateFormat = DateFormat('yyyy-MM-dd');
-  PictureItem(this.imageUrl, this.date, this.result);
+  final documentID;
+  final FirebaseUser user;
+  PictureItem(this.imageUrl, this.date, this.result,this.documentID,this.user);
   String resultDisplay(int result) {
     return RecycleModel().displayHistory[result];
   }
@@ -19,7 +24,7 @@ class PictureItem extends StatelessWidget {
   Widget build(BuildContext context) {
     //print(date.toDate());
     return InkWell(
-      //onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen(true,null,,imageUrl,result))),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ResultScreen(true,null,new File('abc.txt'),imageUrl,result,documentID,user))),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 4,

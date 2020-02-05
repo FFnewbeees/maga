@@ -5,16 +5,24 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maga/camera/labelCheck.dart';
 import 'package:maga/camera/recycleModel.dart';
+import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ResultScreen extends StatefulWidget {
-  //final bool iconCheck;
+  final bool iconCheck;
   final List<ImageLabel> labels;
   final File imageFile;
-
-  ResultScreen(this.labels, this.imageFile);
+  final String imageUrl;
+  final int resultType;
+  String documentID;
+  final FirebaseUser user;
+  // final FirebaseUser user;
+  ResultScreen(this.iconCheck, this.labels, this.imageFile, this.imageUrl,
+      this.resultType, this.documentID, this.user);
   //ResultScreen(this.iconCheck,);
   @override
   _ResultScreenState createState() => _ResultScreenState();
@@ -30,31 +38,33 @@ class _ResultScreenState extends State<ResultScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    for (ImageLabel label in widget.labels) {
-      //label.text
-      int a = LabelCheck().check(label.text);
-      if (a == 0) {
-        continue;
+    if (!widget.iconCheck) {
+      for (ImageLabel label in widget.labels) {
+        //label.text
+        int a = LabelCheck().check(label.text);
+        if (a == 0) {
+          continue;
+        }
+        if (a == 1) {
+          result = RecycleModel().displayHistory[a];
+          comment = RecycleModel().commentCheck(a);
+          result_type = a;
+          break;
+        }
+        if (a == 2) {
+          result = RecycleModel().displayHistory[a];
+          comment = RecycleModel().commentCheck(a);
+          result_type = a;
+          break;
+        }
+        if (a == 3) {
+          result = RecycleModel().displayHistory[a];
+          comment = RecycleModel().commentCheck(a);
+          result_type = a;
+          break;
+        }
       }
-      if (a == 1) {
-        result = RecycleModel().displayHistory[a];
-        comment = RecycleModel().commentCheck(a);
-        result_type = a;
-        break;
-      }
-      if (a == 2) {
-        result = RecycleModel().displayHistory[a];
-        comment = RecycleModel().commentCheck(a);
-        result_type = a;
-        break;
-      }
-      if (a == 3) {
-        result = RecycleModel().displayHistory[a];
-        comment = RecycleModel().commentCheck(a);
-        result_type = a;
-        break;
-      }
-    }
+    } else {}
   }
 
   // String commentCheck(int result) {
@@ -72,14 +82,55 @@ class _ResultScreenState extends State<ResultScreen> {
   //   }
   //   return '';
   // }
+  void dialogCancel() {
+    Navigator.of(context).pop();
+  }
 
-  void delete() {}
-   save() async {
+  void dialogYes() async {
+    print(widget.documentID);
+    print(widget.user.email);
+    await Firestore.instance
+        .collection('scanHistory')
+        .document(widget.documentID)
+        .delete();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
+  void delete() async {
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text("Delete?"),
+            content: Text("Do you want to delete?"),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('Yes'),
+                onPressed: () {
+                  dialogYes();
+                },
+              ),
+              CupertinoDialogAction(
+                child: Text('No'),
+                onPressed: () {
+                  dialogCancel();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void save() async {
     try {
-      FirebaseUser user = await auth.currentUser();
+      //FirebaseUser user = await auth.currentUser();
+      EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
+      EasyLoading.instance.maskType = EasyLoadingMaskType.black;
+      EasyLoading.show(status: 'loading...');
       StorageReference storageReference = FirebaseStorage()
           .ref()
-          .child('scanImage/${user.email}/${DateTime.now()}');
+          .child('scanImage/${widget.user.email}/${DateTime.now()}');
       StorageUploadTask uploadTask = storageReference.putFile(widget.imageFile);
       await uploadTask.onComplete.then((_) {
         print('upload complete');
@@ -88,11 +139,12 @@ class _ResultScreenState extends State<ResultScreen> {
       });
       var url = await storageReference.getDownloadURL();
       await Firestore.instance.collection('scanHistory').document().setData({
-        'user': user.email,
+        'user': widget.user.email,
         'result_type': result_type,
         'imageurl': url,
         'date': DateTime.now().toLocal()
       });
+      EasyLoading.showSuccess('Great Success!');
     } catch (e) {
       print('result screen save error1 : ' + e.toString());
     }
@@ -101,50 +153,71 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
     // print('fk'+widget.labels[0].text.toString());
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Result'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.save),
-              onPressed: () {
-                //CircularProgressIndicator();
-                save();
-              },
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Image.file(
-                  widget.imageFile,
-                  fit: BoxFit.cover,
-                  height: 200,
-                ),
-              ),
-              Text(result),
-              Text(comment),
-              Container(
-                height: MediaQuery.of(context).size.height - 225,
-                child: ListView.builder(
-                  itemBuilder: (ctx, index) {
-                    return ListTile(
-                      title: Text(widget.labels[index].text),
-                      subtitle: Text(widget.labels[index].entityId.toString() +
-                          "\n" +
-                          widget.labels[index].confidence.toString()),
-                      isThreeLine: true,
-                    );
-                  },
-                  itemCount: widget.labels.length,
-                ),
-              ),
+    return FlutterEasyLoading(
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Result'),
+            actions: <Widget>[
+              widget.iconCheck
+                  ? IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        //CircularProgressIndicator();
+                        delete();
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(Icons.save),
+                      onPressed: () {
+                        //CircularProgressIndicator();
+                        save();
+                      },
+                    ),
             ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: widget.iconCheck
+                      ? FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: widget.imageUrl,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          widget.imageFile,
+                          fit: BoxFit.cover,
+                          height: 200,
+                        ),
+                ),
+                Text(result),
+                Text(comment),
+                widget.iconCheck
+                    ? Container()
+                    : Container(
+                        height: MediaQuery.of(context).size.height - 225,
+                        child: ListView.builder(
+                          itemBuilder: (ctx, index) {
+                            return ListTile(
+                              title: Text(widget.labels[index].text),
+                              subtitle: Text(widget.labels[index].entityId
+                                      .toString() +
+                                  "\n" +
+                                  widget.labels[index].confidence.toString()),
+                              isThreeLine: true,
+                            );
+                          },
+                          itemCount: widget.labels.length,
+                        ),
+                      ),
+              ],
+            ),
           ),
         ),
       ),

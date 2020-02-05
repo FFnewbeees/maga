@@ -10,7 +10,7 @@ class LabelCheck {
     if (formatted.contains('bottle')) {
       return 1;
     }
-    if (formatted.contains('furniture')) {
+    if (formatted.contains('furniture') || formatted.contains('chair') || formatted.contains('table') || formatted.contains('desk')) {
       return 2;
     }
     if(formatted.contains('electronic')){
