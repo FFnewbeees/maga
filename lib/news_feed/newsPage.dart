@@ -20,20 +20,15 @@ class _NewsPageState extends State<NewsPage> {
   List<News> _items= [];
   bool _isLoading = false;
   bool _isInit = true;
-
-  String currentUser;
   
   Future<void> fetchNews() async{
 
           _isLoading = true;
  
           const url = 'https://content.guardianapis.com/search?q=australia&tag=environment/recycling&from-date=2018-01-01&show-tags=contributor&show-fields=body,thumbnail,short-url&show-refinements=all&order-by=relevance&api-key=ed144467-d910-464d-93bd-f864c65a3b1c&page-size=50';
-          
-           final FirebaseAuth auth = FirebaseAuth.instance;
-           final FirebaseUser user = await auth.currentUser();
            
           try{
-            currentUser = user.email;
+           
             
             final response = await http.get(url);
 
@@ -53,7 +48,7 @@ class _NewsPageState extends State<NewsPage> {
                     author: data['tags'][0]['webTitle'],
                     content: data['fields']['body'],
                     url:data['webUrl'],
-                    user: currentUser
+                    user: widget.user.email
                   ));
               });
             _items = loadedNews;

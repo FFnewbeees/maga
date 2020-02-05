@@ -15,22 +15,26 @@ class NewsDetail extends StatefulWidget {
 }
 
 class _NewsDetailState extends State<NewsDetail> {
+
   final dateFormat = DateFormat('yyyy-MM-dd');
   bool isFavourite ;
   String currentNewsId;
   var imageUrl ;
-    var title ;
-    var date ;
-    var author ;
-    var content ;
-    var url ;
-    var user ;
-    // bool isFavourite ;
-    var a =0;
+  var title ;
+  var date ;
+  var author ;
+  var content ;
+  var url ;
+  var user ;
+  
+  // bool isFavourite ;
+  var a =0;
+  
+  final CollectionReference collectionRef = Firestore.instance.collection('favouriteNews');
 
   @override
   Widget build(BuildContext context) {
-    if(a==0)
+    if(a == 0)
     {
       final routeArgs = ModalRoute.of(context).settings.arguments as Map<dynamic, dynamic>;
       currentNewsId = routeArgs['id'];
@@ -42,6 +46,7 @@ class _NewsDetailState extends State<NewsDetail> {
       url = routeArgs['url'];
       user = routeArgs['user'];
       isFavourite = routeArgs['isFavourite'];
+
       a++;
     }
 
@@ -49,17 +54,22 @@ class _NewsDetailState extends State<NewsDetail> {
       showModalBottomSheet(
         context: context,
         builder: (context) => BottomSheetWidget(url:url),
-        );
+      );
     }
-    
-    
-  //todo: delete from fav
-  //todo: check from database to see if it is fav
 
+void removedFavourite() async{
+
+  final result = await collectionRef.where("id", isEqualTo: currentNewsId).where('user', isEqualTo: user).getDocuments();
+  print(result.documents.length);
+
+  final docID = result.documents.first.documentID;
+  print(docID);
+  await collectionRef.document(docID.toString()).delete();
+  print('deleted yeh');
+  
+}
 
 void saveAsFavourite() async {
-
-    final CollectionReference collectionRef = Firestore.instance.collection('favouriteNews');
 
     try{
 
@@ -76,7 +86,6 @@ void saveAsFavourite() async {
     };
 
       await collectionRef.document().setData(data);
-      
       
       print(isFavourite);
         return showDialog(
@@ -137,15 +146,20 @@ void saveAsFavourite() async {
           IconButton(
             icon:Icon(Icons.favorite,color: Colors.red,),
             onPressed: (){
-              
+              removedFavourite();
+                setState(() {
+                  isFavourite = false;
+                  print('set to normal');
+                  print(isFavourite);
+                });
             },
           ) : IconButton(icon: Icon(Icons.favorite_border), onPressed: (){
                saveAsFavourite();
                 setState(() {
-                print('set to favourte');
-                print(isFavourite);
-                isFavourite = true;
-        });
+                  print('set to favourte');
+                  print(isFavourite);
+                  isFavourite = true;
+                });
             },)
     
         ],

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maga/user_profile/favNewsItem.dart';
+import '../authentication/signIn.dart';
 
 class ProfilePage extends StatefulWidget {
   final FirebaseUser user;
@@ -18,10 +19,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   List<FavNewsItem> collections = [];
   bool _isLoading = false;
- // bool _isInit = true;
-  String currentUser;
 
   Stream<QuerySnapshot> querySnapshot;
+
 
   @override               
     void initState(){
@@ -29,28 +29,41 @@ class _ProfilePageState extends State<ProfilePage> {
     getQuery();
       
   }
+  
+  Future signOut() async{
+      await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> Login()));
 
-  void getQuery() async{
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final FirebaseUser user = await auth.currentUser();
-    currentUser = user.email;
-    
+  }
+
+  void getQuery() async{    
     querySnapshot = Firestore.instance
     .collection('favouriteNews')
-    .where('user', isEqualTo:currentUser)
+    .where('user', isEqualTo:widget.user.email)
     .orderBy('date', descending: true)
     .snapshots();
 
     print('got data');
 
   }
-
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: (){},
+          ),
         title: Text('Profile'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: (){
+              signOut();
+            },)
+        ],
       ),
       body: Stack(
         children: <Widget>[
@@ -105,20 +118,25 @@ class _ProfilePageState extends State<ProfilePage> {
     return StreamBuilder(
       stream: querySnapshot = Firestore.instance
     .collection('favouriteNews')
-    .where('user', isEqualTo:currentUser)
+    .where('user', isEqualTo:widget.user.email)
     .snapshots(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if(snapshot.hasError){
           return new Center(
             child: Text('Error on streamBuilder : ${snapshot.error.toString()}'),
-            );
+          );
         }
 
         if(!snapshot.hasData){
-          return Center(
-            child: Text('Your News Collection is empty'),
+          return new Loader();
+        }
+        
+        if(snapshot.data.documents.length == 0){
+          return new Center(
+            child: Text('Your News Collection is empty', style: TextStyle(color:Colors.blue) ),
             );
-        }else{
+        }
+        else{
           return new ListView.builder(
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
@@ -144,23 +162,23 @@ class _ProfilePageState extends State<ProfilePage> {
   Container _buildHeader(BuildContext context){
     return Container(
       margin: EdgeInsets.only(top: 50.0, bottom: 40.0),
-      height: 200.0,
+    
       child: Stack(
         children: <Widget>[
           Container(
             width: 400.0,
             padding: EdgeInsets.only(top: 40.0, left: 40.0, right: 40.0, bottom: 10.0),
             child: Material(
-              shape: RoundedRectangleBorder(
+                shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
               elevation: 5.0,
               color: Colors.white,
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 60.0),
-                  Text("Victor", style: Theme.of(context).textTheme.title),
+                  Text(widget.user.displayName.toString(), style: Theme.of(context).textTheme.title),
                   SizedBox(height: 10.0),
-                  Text("Email: victor666@gmail.com"),
+                  Text(widget.user.email),
                   SizedBox(height: 10.0),
                 ],
               ),

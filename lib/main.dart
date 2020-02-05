@@ -9,6 +9,7 @@ import './news_feed/newsBottomSheet.dart';
 //WidgetsFlutterBinding.ensureInitialized();
 void main() => runApp(MyApp());
 
+
 // Future<void> userGet() async {
 
 //      //user = fireuser;
@@ -56,6 +57,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (ctx) => SplashScren(),
         NewsDetail.routeName: (ctx) => NewsDetail(),
+        Login.routeName:(ctx) => Login()
       },
     );
   }
