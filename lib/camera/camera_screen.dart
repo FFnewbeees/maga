@@ -95,54 +95,6 @@ class _CameraScreenState extends State<CameraScreen> {
           );
           
         }
-        //print(snapshot.requireData.documents.length);
-        // switch (snapshot.connectionState) {
-        //   case ConnectionState.waiting:
-        //     return Loader();
-        //     break;
-        //   case ConnectionState.none:
-        //     print('connection none');
-
-        //     //return streamBuilder();
-        //     break;
-
-        //   case ConnectionState.active:
-        //     print('connection active');
-        //     if (!snapshot.hasData) {
-        //       print("fking hell");
-        //       return Loader();
-        //     }
-        //    // snapshot.data.document
-        //     //print();
-        //     return ListView.builder(
-
-        //       itemBuilder: (ctx, index) {
-        //         return PictureItem(
-        //             snapshot.data.documents[index]['imageurl'],
-        //             snapshot.data.documents[index]['date'] as Timestamp,
-        //             snapshot.data.documents[index]['result_type']);
-        //       },
-        //       itemCount: snapshot.data.documents.length,
-        //     );
-        //     break;
-        //   case ConnectionState.done:
-        //     print('connection done');
-        //     if (!snapshot.hasData) {
-        //       print("fking hell");
-        //       return Loader();
-        //     }
-
-        //     return ListView.builder(
-        //       itemBuilder: (ctx, index) {
-        //         return PictureItem(
-        //             snapshot.data.documents[index]['imageurl'],
-        //             snapshot.data.documents[index]['date'],
-        //             snapshot.data.documents[index]['result_type']);
-        //       },
-        //       itemCount: snapshot.data.documents.length,
-        //     );
-        //     break;
-        // }
       },
     );
   }
