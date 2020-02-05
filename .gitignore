@@ -8,6 +8,9 @@
 .buildlog/
 .history
 .svn/
+ios
+android
+
 # IntelliJ related
 *.iml
 *.ipr
