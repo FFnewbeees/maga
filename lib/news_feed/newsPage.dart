@@ -9,8 +9,10 @@ import 'package:maga/loader/loader.dart';
 
 class NewsPage extends StatefulWidget {
   @override
+  final FirebaseUser user;
+  NewsPage(this.user);
   _NewsPageState createState() => _NewsPageState();
-  NewsPage({Key key}) : super(key: key);
+  
 }
 
 class _NewsPageState extends State<NewsPage> {

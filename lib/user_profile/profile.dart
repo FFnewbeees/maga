@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:maga/user_profile/favNewsItem.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key}) : super(key: key);
+  final FirebaseUser user;
+  ProfilePage(this.user);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
