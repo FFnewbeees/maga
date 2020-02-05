@@ -46,6 +46,7 @@ class _NewsDetailState extends State<NewsDetail> {
       url = routeArgs['url'];
       user = routeArgs['user'];
       isFavourite = routeArgs['isFavourite'];
+
       a++;
     }
 
@@ -53,35 +54,8 @@ class _NewsDetailState extends State<NewsDetail> {
       showModalBottomSheet(
         context: context,
         builder: (context) => BottomSheetWidget(url:url),
-        );
+      );
     }
-    
-    
-  //todo: delete from fav
-  //todo: check from database to see if it is fav
-
-// void checkDuplicate() async{
-
-//   final CollectionReference ref = Firestore.instance.collection('favouriteNews');
-
-//   final result = await ref.where("id", isEqualTo: currentNewsId).where('user', isEqualTo: user).getDocuments();
-
-//   if(result.documents.length != 0){
-//     return showDialog(
-//           context: context,
-//           barrierDismissible: true,
-//           builder: (BuildContext context){
-//             return AlertDialog(
-//               backgroundColor: Colors.white,
-//               title: Text('Error'),
-//               content: Text(''),
-//               elevation: 24.0,
-//               shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
-//             );
-//           }
-//         );
-//   }
-// }
 
 void removedFavourite() async{
 

@@ -27,7 +27,7 @@ class _CameraScreenState extends State<CameraScreen> {
   List<ImageLabel> labels = [];
   bool showLoader = false;
   final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
-  FirebaseUser user;
+  //FirebaseUser user;
   Stream<QuerySnapshot> snapQuery;
 
   // FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -36,6 +36,7 @@ class _CameraScreenState extends State<CameraScreen> {
     // TODO: implement initState
     super.initState();
     _getQurey();
+   // print();
   }
 
   void _getQurey() {
@@ -53,7 +54,7 @@ class _CameraScreenState extends State<CameraScreen> {
       //initialData: Firestore.instance.collection('scanHistory') .where('user', isEqualTo: this.user.email).snapshots(),
       stream: snapQuery = Firestore.instance
           .collection('scanHistory')
-          .where('user', isEqualTo: user)
+          .where('user', isEqualTo: widget.user.email)
           .orderBy('date', descending: true)
           .snapshots(),
         
@@ -64,10 +65,18 @@ class _CameraScreenState extends State<CameraScreen> {
             child: Text("Error on streambuilder: ${snapshot.error.toString()}"),
           );
         }
-        if (!snapshot.hasData) {
+        if(!snapshot.hasData) {
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return new Center(child: Text("No data Scann one"),);
+          }
           return new Loader();
         } else {
           // print(snapshot.data.documents.length);
+           //print(snapshot.connectionState.toString());
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return new Center(child: Text("No data Scann one"),);
+          }
+          
           return new ListView.builder(
             itemExtent: 234,
             cacheExtent: 100.0,
@@ -84,6 +93,7 @@ class _CameraScreenState extends State<CameraScreen> {
             },
             itemCount: snapshot.data.documents.length,
           );
+          
         }
         //print(snapshot.requireData.documents.length);
         // switch (snapshot.connectionState) {

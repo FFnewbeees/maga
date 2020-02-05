@@ -8,6 +8,7 @@ import '../user_profile/profile.dart';
 class Tabs extends StatefulWidget {
   final FirebaseUser user;
   Tabs(this.user);
+  
   @override
   _TabsState createState() => _TabsState();
 }
@@ -56,12 +57,16 @@ class _TabsState extends State<Tabs> {
       NewsPage(widget.user),
       ProfilePage(widget.user)
     ];
-
+    print(widget.user.toString()+"cao ni ma ");
     _welcomeMessage();
 
     super.initState();
   }
+  @override
+  void dispose(){
+    super.dispose();
 
+  }
   Future<void> _welcomeMessage() async {
     if (widget.user != null) {
       return showDialog(

@@ -6,6 +6,7 @@ import '../navigation/tabs.dart';
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => new _LoginState();
+  static const routeName = '/login';
 }
 
 class _LoginState extends State<Login> {
@@ -190,6 +191,7 @@ class _LoginState extends State<Login> {
             Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => Tabs(response.user)));
+            print(response.user);
           }
           
       }catch(e){
