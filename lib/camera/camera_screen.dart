@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:maga/authentication/signIn.dart';
+//port 'package:maga/authentication/signIn.dart';
 import 'package:maga/camera/pictureItem.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:maga/camera/result_screen.dart';
@@ -107,11 +107,19 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
+  //void showHint() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scanner'),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.info),
+              onPressed: () {
+                showDialog();
+              })
+        ],
       ),
       body: showLoader
           ? Center(
@@ -120,10 +128,117 @@ class _CameraScreenState extends State<CameraScreen> {
           : streamBuilder(),
       floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.camera_alt),
-        onPressed: _cameraAction,
+        onPressed: () async {
+          // await showDialog();
+          _cameraAction();
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  Widget dialogWidget() {
+    return Container(
+      width: 190,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                  Text(
+                    'What belongs in the yellow bin',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    softWrap: true,
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              "\u2022 aluminium and steel tins and cans",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 aerosol cans",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 aluminium foil",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 glass bottles and jars",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 plastic soft-drink and water bottles",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 plastic food containers",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 juice and milk bottles",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 plastic containers for laundry",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 newspapers, magazines,advertising",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 egg cartons",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 envelopes",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 cardboard boxes",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 pizza boxes",
+              softWrap: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showDialog() async {
+    await showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text("Recycle rule"),
+            content: dialogWidget(),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('OK'),
+                onPressed: () {
+                  //_getImage(context, ImageSource.camera);
+                  // _cameraAction();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   void _cameraAction() {
@@ -135,6 +250,7 @@ class _CameraScreenState extends State<CameraScreen> {
               CupertinoActionSheetAction(
                 child: const Text('Open Camera'),
                 onPressed: () {
+                  // showDialog();
                   _getImage(context, ImageSource.camera);
                   Navigator.of(context).pop();
                 },
@@ -146,16 +262,14 @@ class _CameraScreenState extends State<CameraScreen> {
                   Navigator.of(context).pop();
                 },
               ),
-              SizedBox(
-                height: 10,
-              ),
-              CupertinoActionSheetAction(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
             ],
+            cancelButton: CupertinoActionSheetAction(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            message: Text("Please focus on one object at a time\nEnjoy :)"),
           );
         });
   }

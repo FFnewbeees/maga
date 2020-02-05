@@ -89,6 +89,9 @@ class _ResultScreenState extends State<ResultScreen> {
   void dialogYes() async {
   // print(widget.documentID);
    // print(widget.user.email);
+    EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
+      EasyLoading.instance.maskType = EasyLoadingMaskType.black;
+      EasyLoading.show(status: '');
     var tmp = await Firestore.instance.collection('scanHistory').document(widget.documentID).get();
     //print(tmp.data);
     StorageReference storageReference = await FirebaseStorage().getReferenceFromUrl(tmp.data['imageurl']);
@@ -97,6 +100,7 @@ class _ResultScreenState extends State<ResultScreen> {
         .collection('scanHistory')
         .document(widget.documentID)
         .delete();
+    EasyLoading.showSuccess('');    
     Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
