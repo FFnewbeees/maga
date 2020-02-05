@@ -62,17 +62,16 @@ class _NewsItemState extends State<NewsItem> {
   
   void checkFavourite() async {
 
-    //check user id
+
     final FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
 
     //check news id
+    //check user id
     final response = await Firestore.instance
     .collection('favouriteNews')
     .where('user', isEqualTo: currentUser.email)
     .where('id', isEqualTo: widget.id)
     .getDocuments();
-
-    //print(response.documents);
 
     if(response.documents.length != 0){
         isFavourite = true;

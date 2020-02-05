@@ -49,7 +49,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: (){},
+          ),
         title: Text('Profile'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: (){},)
+        ],
       ),
       body: Stack(
         children: <Widget>[
@@ -110,14 +119,19 @@ class _ProfilePageState extends State<ProfilePage> {
         if(snapshot.hasError){
           return new Center(
             child: Text('Error on streamBuilder : ${snapshot.error.toString()}'),
-            );
+          );
         }
 
         if(!snapshot.hasData){
-          return Center(
-            child: Text('Your News Collection is empty'),
+          return new Loader();
+        }
+        
+        if(snapshot.data.documents.length == 0){
+          return new Center(
+            child: Text('Your News Collection is empty', style: TextStyle(color:Colors.blue) ),
             );
-        }else{
+        }
+        else{
           return new ListView.builder(
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
