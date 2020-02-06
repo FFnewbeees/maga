@@ -5,6 +5,7 @@ import '././news_feed/newsDetail.dart';
 import './navigation/tabs.dart';
 import './authentication/signIn.dart';
 import './news_feed/newsBottomSheet.dart';
+import './user_profile/editProfile.dart';
 
 //WidgetsFlutterBinding.ensureInitialized();
 void main() => runApp(MyApp());
@@ -57,7 +58,9 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (ctx) => SplashScren(),
         NewsDetail.routeName: (ctx) => NewsDetail(),
-        Login.routeName:(ctx) => Login()
+        Login.routeName:(ctx) => Login(),
+        EditProfile.routeName:(ctx) => EditProfile()
+
       },
     );
   }
