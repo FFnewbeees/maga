@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:maga/authentication/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../navigation/tabs.dart';
@@ -22,6 +23,8 @@ class _LoginState extends State<Login> {
     super.initState();
     // TODO: implement initState
     print("enter login");
+    EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
+    EasyLoading.instance.maskType = EasyLoadingMaskType.black;
     //checkAuth();
   }
 
@@ -33,157 +36,158 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Form(
-      key: _formKey,
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        height: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Colors.green[400],
-          Colors.lightBlueAccent.withOpacity(0.8),
-        ])),
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 80.0),
-            Container(
-              margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-              height: 80,
-              child: Text(
-                'M.A.G.A',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 46.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 40.0,
-              child: Text(
-                errorMessage,
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-            TextFormField(
-              validator: (input) {
-                if (input.isEmpty) {
-                  return 'Please enter an email';
-                }
-                if (!EmailValidator.validate(input)) {
-                  return 'Please enter the correct email';
-                }
-              },
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (input) => _email = input,
-              onSaved: (input) => _email = input,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(16.0),
-                prefixIcon: Container(
-                  padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                  margin: EdgeInsets.only(right: 8.0),
-                  decoration: BoxDecoration(
+    return FlutterEasyLoading(
+          child: Scaffold(
+          body: Form(
+        key: _formKey,
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          height: double.infinity,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+            Colors.green,
+            Colors.lightBlueAccent.withOpacity(0.6),
+          ])),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 80.0),
+              Container(
+                margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
+                height: 80,
+                child: Text(
+                  'M.A.G.A',
+                  style: TextStyle(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
-                        bottomRight: Radius.circular(10.0)),
+                    fontSize: 46.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: Icon(Icons.person, color: Colors.lightGreen),
                 ),
-                hintText: 'Enter Your Email',
-                hintStyle: TextStyle(color: Colors.white54),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.5),
               ),
-            ),
-            SizedBox(height: 10.0),
-            TextFormField(
-              validator: (input) {
-                if (input.length < 6) {
-                  return 'Password has to be at least 6 characters';
-                }
-              },
-              onSaved: (input) => _password = input,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(16.0),
-                prefixIcon: Container(
-                  padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                  margin: EdgeInsets.only(right: 8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
-                        bottomRight: Radius.circular(10.0)),
-                  ),
-                  child: Icon(Icons.lock, color: Colors.lightGreen),
+              SizedBox(
+                height: 40.0,
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(color: Colors.red),
                 ),
-                hintText: 'Enter Your Password',
-                hintStyle: TextStyle(color: Colors.white54),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.5),
               ),
-              obscureText: true,
-            ),
-            SizedBox(height: 40.0),
-            SizedBox(
-              width: double.infinity,
-              child: RaisedButton(
-                color: Colors.white,
-                textColor: Colors.lightGreen,
-                padding: EdgeInsets.all(20.0),
-                child: Text('Login'.toUpperCase()),
-                onPressed: () {
-                  signIn();
+              TextFormField(
+                validator: (input) {
+                  if (input.isEmpty) {
+                    return 'Please enter an email';
+                  }
+                  if (!EmailValidator.validate(input)) {
+                    return 'Please enter the correct email';
+                  }
                 },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)),
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (input) => _email = input,
+                onSaved: (input) => _email = input,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(16.0),
+                  prefixIcon: Container(
+                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    margin: EdgeInsets.only(right: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
+                          bottomRight: Radius.circular(10.0)),
+                    ),
+                    child: Icon(Icons.person, color: Colors.lightGreen),
+                  ),
+                  hintText: 'Enter Your Email',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide.none),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.5),
+                ),
               ),
-            ),
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                FlatButton(
-                    textColor: Colors.white70,
-                    child: Text("Create Account".toUpperCase()),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUp(),
-                          ));
-                    }),
-                Container(
-                  color: Colors.white54,
-                  width: 2.0,
-                  height: 20.0,
+              SizedBox(height: 10.0),
+              TextFormField(
+                validator: (input) {
+                  if (input.length < 6) {
+                    return 'Password has to be at least 6 characters';
+                  }
+                },
+                onSaved: (input) => _password = input,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(16.0),
+                  prefixIcon: Container(
+                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    margin: EdgeInsets.only(right: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
+                          bottomRight: Radius.circular(10.0)),
+                    ),
+                    child: Icon(Icons.lock, color: Colors.lightGreen),
+                  ),
+                  hintText: 'Enter Your Password',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide.none),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.5),
                 ),
-                FlatButton(
-                  textColor: Colors.white70,
-                  child: Text("Forgot Password".toUpperCase()),
-                  onPressed: () async {
-                    resetPassword();
+                obscureText: true,
+              ),
+              SizedBox(height: 40.0),
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  color: Colors.white,
+                  textColor: Colors.lightGreen,
+                  padding: EdgeInsets.all(20.0),
+                  child: Text('Login'.toUpperCase()),
+                  onPressed: () {
+                    signIn();
                   },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
                 ),
-              ],
-            ),
-            SizedBox(height: 10.0),
-          ],
+              ),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlatButton(
+                      textColor: Colors.white70,
+                      child: Text("Create Account".toUpperCase()),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignUp(),
+                            ));
+                      }),
+                  Container(
+                    color: Colors.white54,
+                    width: 2.0,
+                    height: 20.0,
+                  ),
+                  FlatButton(
+                    textColor: Colors.white70,
+                    child: Text("Forgot Password".toUpperCase()),
+                    onPressed: () async {
+                      resetPassword();
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   void resetPassword() async {
@@ -252,8 +256,10 @@ class _LoginState extends State<Login> {
     if (formState.validate()) {
       formState.save();
       try {
+        EasyLoading.show();
         final response = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
+        EasyLoading.dismiss();    
         if (response.user != null) {
           Navigator.pop(context);
           Navigator.pushReplacement(context,

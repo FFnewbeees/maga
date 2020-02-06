@@ -8,7 +8,7 @@ import '../user_profile/profile.dart';
 class Tabs extends StatefulWidget {
   final FirebaseUser user;
   Tabs(this.user);
-  
+
   @override
   _TabsState createState() => _TabsState();
 }
@@ -23,14 +23,14 @@ class _TabsState extends State<Tabs> {
 
   //final PageStorageBucket bucket =PageStorageBucket();
   int _selectedPageIndex = 0;
-   @override
+  @override
   void initState() {
-  
-   // print(widget.user.toString()+"cao ni ma ");
-   // _welcomeMessage();
+    // print(widget.user.toString()+"cao ni ma ");
+    // _welcomeMessage();
 
     super.initState();
   }
+
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
         onTap: (int index) => setState(() => _selectedPageIndex = index),
         backgroundColor: Theme.of(context).accentColor,
@@ -57,36 +57,34 @@ class _TabsState extends State<Tabs> {
         ],
       );
 
- 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
-
   }
-  Future<void> _welcomeMessage() async {
-    if (widget.user != null) {
-      return showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              title: Text('Message'),
-              content: Text('Welcome' + widget.user.email),
-              elevation: 24.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            );
-          });
-    } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => Login()));
-    }
-  }
+  // Future<void> _welcomeMessage() async {
+  //   if (widget.user != null) {
+  //     return showDialog(
+  //         context: context,
+  //         barrierDismissible: true,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             backgroundColor: Colors.white,
+  //             title: Text('Message'),
+  //             content: Text('Welcome' + widget.user.email),
+  //             elevation: 24.0,
+  //             shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(10)),
+  //           );
+  //         });
+  //   } else {
+  //     Navigator.of(context).pushReplacement(
+  //         MaterialPageRoute(builder: (BuildContext context) => Login()));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-      _pages = [
+    _pages = [
       CameraScreen(widget.user),
       NewsPage(widget.user),
       ProfilePage(widget.user)
