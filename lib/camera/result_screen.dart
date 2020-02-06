@@ -64,7 +64,10 @@ class _ResultScreenState extends State<ResultScreen> {
           break;
         }
       }
-    } else {}
+    } else {
+      result = RecycleModel().displayHistory[widget.resultType];
+      comment = RecycleModel().commentCheck(widget.resultType);
+    }
   }
 
   // String commentCheck(int result) {
