@@ -5,6 +5,7 @@ import 'package:maga/authentication/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../navigation/tabs.dart';
 import 'package:email_validator/email_validator.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => new _LoginState();
@@ -69,17 +70,19 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(
               height: 40.0,
-              child: Text(errorMessage,style: TextStyle(color: Colors.red),),
+              child: Text(
+                errorMessage,
+                style: TextStyle(color: Colors.red),
+              ),
             ),
             TextFormField(
               validator: (input) {
                 if (input.isEmpty) {
                   return 'Please enter an email';
                 }
-                if(!EmailValidator.validate(input)){
+                if (!EmailValidator.validate(input)) {
                   return 'Please enter the correct email';
                 }
-                
               },
               keyboardType: TextInputType.emailAddress,
               onSaved: (input) => _email = input,
@@ -177,7 +180,9 @@ class _LoginState extends State<Login> {
                 FlatButton(
                   textColor: Colors.white70,
                   child: Text("Forgot Password".toUpperCase()),
-                  onPressed: () {},
+                  onPressed: () async{
+                    resetPassword();
+                  },
                 ),
               ],
             ),
@@ -187,7 +192,10 @@ class _LoginState extends State<Login> {
       ),
     ));
   }
+  void resetPassword() async{
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: _email);
 
+  }
   Future signIn() async {
     final formState = _formKey.currentState;
     if (formState.validate()) {
@@ -216,24 +224,38 @@ class _LoginState extends State<Login> {
         //   }
         // );
         if (Platform.isAndroid) {
-          setState(() {
-            switch (e.message) {
-              case 'There is no user record corresponding to this identifier. The user may have been deleted.':
-               errorMessageChange("User not found, please check your email");
-                break;
-              case 'The password is invalid or the user does not have a password.':
-                errorMessageChange("Password not matched, please check your password");
-                break;
-              case 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
-                errorMessageChange("NetworkError, please try again");
-                break;
-              // ...
-              default:
-                print('Case ${e.message} is not yet implemented');
-            }
-          });
+          switch (e.message) {
+            case 'There is no user record corresponding to this identifier. The user may have been deleted.':
+              errorMessageChange("User not found, please check your email");
+              break;
+            case 'The password is invalid or the user does not have a password.':
+              errorMessageChange(
+                  "Password not matched, please check your password");
+              break;
+            case 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
+              errorMessageChange("NetworkError, please try again");
+              break;
+            // ...
+            default:
+              print('Case ${e.message} is not yet implemented');
+          }
+        } else if (Platform.isIOS) {
+          switch (e.code) {
+            case 'Error 17011':
+              errorMessageChange("User not found, please check your email");
+              break;
+            case 'Error 17009':
+              errorMessageChange(
+                  "Password not matched, please check your password");
+              break;
+            case 'Error 17020':
+              errorMessageChange("Network error, please try again");
+              break;
+            // ...
+            default:
+              print('Case ${e.message} is not yet implemented');
+          }
         }
-
       }
     }
   }
