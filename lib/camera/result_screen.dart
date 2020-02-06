@@ -172,7 +172,8 @@ class _ResultScreenState extends State<ResultScreen> {
         'imageurl': url,
         'date': DateTime.now().toLocal()
       });
-      EasyLoading.showSuccess('');
+      //AppBar().actions.
+      EasyLoading.showSuccess('',duration: new Duration(seconds:1));
     } catch (e) {
       print('result screen save error1 : ' + e.toString());
     }
@@ -200,7 +201,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     icon: Icon(Icons.save),
                     onPressed: () {
                       //CircularProgressIndicator();
-                      ;
+                      
                       save();
                     },
                   ),

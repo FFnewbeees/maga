@@ -40,8 +40,8 @@ class _ProfilePageState extends State<ProfilePage> {
     getQuery();
   }
   
-  Future signOut() async{
-      await FirebaseAuth.instance.signOut();
+  void signOut() async{
+    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> Login()));
 
@@ -239,6 +239,7 @@ class _ProfilePageState extends State<ProfilePage> {
         
         if(snapshot.data.documents.length == 0){
           return new Center(
+            
             child: Text('Your News Collection is empty', style: TextStyle(color:Colors.blue) ),
             );
         }
