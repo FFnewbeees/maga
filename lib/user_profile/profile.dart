@@ -1,4 +1,10 @@
 
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:maga/user_profile/editProfile.dart';
 
 import '../loader/loader.dart';
@@ -8,9 +14,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maga/user_profile/favNewsItem.dart';
 import '../authentication/signIn.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class ProfilePage extends StatefulWidget {
-  final FirebaseUser user;
+   FirebaseUser user;
   ProfilePage(this.user);
 
   @override
@@ -21,15 +28,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   List<FavNewsItem> collections = [];
   bool _isLoading = false;
-
+  File image;
+  bool reloadProfile = false;
+  String url;
   Stream<QuerySnapshot> querySnapshot;
-
 
   @override               
     void initState(){
     super.initState();
+    url = widget.user.photoUrl;
     getQuery();
-      
   }
   
   Future signOut() async{
@@ -48,6 +56,96 @@ class _ProfilePageState extends State<ProfilePage> {
 
     print('got data');
 
+  }
+
+    var targetPath;
+    void getFileimage() async {
+    final dir = await path_provider.getTemporaryDirectory();
+    targetPath = dir.absolute.path + '${DateTime.now()}.jpg';
+   }
+
+    void _getImage(BuildContext context, ImageSource imageSource) async {
+    var compressedFile;
+      setState(() {
+        reloadProfile = true;
+      });
+
+    try {
+      image = await ImagePicker.pickImage(source: imageSource);
+      await getFileimage();
+      compressedFile = await FlutterImageCompress.compressAndGetFile(
+        image.absolute.path, 
+        targetPath, 
+        quality: 40
+        );
+
+      StorageReference storageReference = FirebaseStorage()
+        .ref()
+        .child('userProfle/${widget.user.email}/profilePicture.jpg');
+
+      StorageUploadTask uploadTask = storageReference.putFile(compressedFile);
+      await uploadTask.onComplete.then((_){
+        print('upload completed');
+      }).catchError((onError){
+        print('upload has error' + onError.toString());
+      });
+
+      var downloadURL = await storageReference.getDownloadURL();
+      url = downloadURL;
+      print(downloadURL);
+
+      UserUpdateInfo newProfileImage = UserUpdateInfo();
+      newProfileImage.photoUrl = downloadURL.toString();
+      
+      await widget.user.updateProfile(newProfileImage);
+
+      await widget.user.reload();
+
+    } catch (e) {
+      print(e);
+      setState(() {
+        reloadProfile = false;
+      });
+      return;
+    }
+    
+    setState(() {
+      reloadProfile = false;
+      //widget.user.reload();
+    });
+    
+  }
+
+    void _cameraAction() {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (ctx) {
+          return new CupertinoActionSheet(
+            actions: <Widget>[
+              CupertinoActionSheetAction(
+                child: const Text('Open Camera'),
+                onPressed: () {
+                  _getImage(context, ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+              CupertinoActionSheetAction(
+                child: const Text('Open Gallery'),
+                onPressed: () {
+                  _getImage(context, ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            message: Text("Please choose a beautiful profile image"),
+          );
+        });
   }
   
   @override
@@ -183,12 +281,12 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 50.0),
+                  SizedBox(height: 70.0),
                   FlatButton(
                       child: Text('Change Profile Photo'),
                       color: Colors.grey[350],
-                      onPressed: (){
-                        
+                      onPressed: () async {
+                        _cameraAction();
                       },
                     ),
                   SizedBox(height: 10.0),
@@ -204,9 +302,10 @@ class _ProfilePageState extends State<ProfilePage> {
               Material(
                 elevation: 5.0,
                 shape: CircleBorder(),
-                child: CircleAvatar(
-                  radius: 40.0,
-                  child: Image.network(widget.user.photoUrl.toString()),
+                child: reloadProfile ? CircleAvatar(child: CircularProgressIndicator(),radius: 40.0, backgroundColor: Colors.transparent,) : CircleAvatar(
+                  backgroundImage:  NetworkImage(url.toString()) ,
+                  backgroundColor: Colors.transparent,
+                  radius: 50.0,
                 ),
               )
             ],
