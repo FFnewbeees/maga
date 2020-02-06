@@ -37,10 +37,10 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void initState() {
     // TODO: implement initState
-      print("camera screen test1");
+   // print("camera screen test1");
     super.initState();
     if (!widget.iconCheck) {
-      print("camera screen test2");
+    //  print("camera screen test2");
       for (ImageLabel label in widget.labels) {
         //label.text
         int a = LabelCheck().check(label.text);
@@ -66,17 +66,20 @@ class _ResultScreenState extends State<ResultScreen> {
           break;
         }
       }
+      print(widget.imageFile.toString());
     } else {
       result = RecycleModel().displayHistory[widget.resultType];
       comment = RecycleModel().commentCheck(widget.resultType);
     }
   }
- @override
+
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     print("disposed");
   }
+
   // String commentCheck(int result) {
   //   if(result == 0){
   //     return null;
@@ -116,7 +119,7 @@ class _ResultScreenState extends State<ResultScreen> {
         .document(widget.documentID)
         .delete();
     EasyLoading.showSuccess('');
-    
+
     Navigator.of(context).pop();
   }
 
@@ -179,77 +182,76 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget build(BuildContext context) {
     // print('fk'+widget.labels[0].text.toString());
     return FlutterEasyLoading(
-          child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text('Result'),
-            actions: <Widget>[
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Result'),
+          actions: <Widget>[
+            widget.iconCheck
+                ? IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      //CircularProgressIndicator();
+                      print('delete');
+                      delete();
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(Icons.save),
+                    onPressed: () {
+                      //CircularProgressIndicator();
+                      ;
+                      save();
+                    },
+                  ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: widget.iconCheck
+                    ?
+                    //   Image.network(
+                    //         widget.imageUrl,
+                    //         fit: BoxFit.cover,
+                    //         height: 200,
+                    //       )
+                    FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: widget.imageUrl,
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        widget.imageFile,
+                        fit: BoxFit.cover,
+                        height: 200,
+                      ),
+              ),
+              Text(result),
+              Text(comment),
               widget.iconCheck
-                  ? IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        //CircularProgressIndicator();
-                        print('delete');
-                        delete();
-                      },
-                    )
-                  : IconButton(
-                      icon: Icon(Icons.save),
-                      onPressed: () {
-                        //CircularProgressIndicator();
-                        ;
-                        save();
-                      },
+                  ? Container()
+                  : Container(
+                      height: MediaQuery.of(context).size.height - 225,
+                      child: ListView.builder(
+                        itemBuilder: (ctx, index) {
+                          return ListTile(
+                            title: Text(widget.labels[index].text),
+                            subtitle: Text(
+                                widget.labels[index].entityId.toString() +
+                                    "\n" +
+                                    widget.labels[index].confidence.toString()),
+                            isThreeLine: true,
+                          );
+                        },
+                        itemCount: widget.labels.length,
+                      ),
                     ),
             ],
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: widget.iconCheck ?
-                    Image.network(
-                          widget.imageUrl,
-                          fit: BoxFit.cover,
-                          height: 200,
-                        )
-                      // ? FadeInImage.memoryNetwork(
-                      //     placeholder: kTransparentImage,
-                      //     image: widget.imageUrl,
-                      //     height: 200,
-                      //     width: double.infinity,
-                      //     fit: BoxFit.cover,
-                      //   )
-                      : Image.file(
-                          widget.imageFile,
-                          fit: BoxFit.cover,
-                          height: 200,
-                        ),
-                ),
-                 Text(result),
-                 Text(comment),
-                widget.iconCheck
-                    ? Container()
-                    : Container(
-                        height: MediaQuery.of(context).size.height - 225,
-                        child: ListView.builder(
-                          itemBuilder: (ctx, index) {
-                            return ListTile(
-                              title: Text(widget.labels[index].text),
-                              subtitle: Text(
-                                  widget.labels[index].entityId.toString() +
-                                      "\n" +
-                                      widget.labels[index].confidence.toString()),
-                              isThreeLine: true,
-                            );
-                          },
-                          itemCount: widget.labels.length,
-                        ),
-                      ),
-              ],
-            ),
           ),
         ),
       ),
