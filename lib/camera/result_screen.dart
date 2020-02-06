@@ -87,12 +87,20 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void dialogYes() async {
-    print(widget.documentID);
-    print(widget.user.email);
+  // print(widget.documentID);
+   // print(widget.user.email);
+    EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
+      EasyLoading.instance.maskType = EasyLoadingMaskType.black;
+      EasyLoading.show(status: '');
+    var tmp = await Firestore.instance.collection('scanHistory').document(widget.documentID).get();
+    //print(tmp.data);
+    StorageReference storageReference = await FirebaseStorage().getReferenceFromUrl(tmp.data['imageurl']);
+    storageReference.delete();
     await Firestore.instance
         .collection('scanHistory')
         .document(widget.documentID)
         .delete();
+    EasyLoading.showSuccess('');    
     Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
@@ -127,7 +135,7 @@ class _ResultScreenState extends State<ResultScreen> {
       //FirebaseUser user = await auth.currentUser();
       EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
       EasyLoading.instance.maskType = EasyLoadingMaskType.black;
-      EasyLoading.show(status: 'loading...');
+      EasyLoading.show(status: '');
       StorageReference storageReference = FirebaseStorage()
           .ref()
           .child('scanImage/${widget.user.email}/${DateTime.now()}');
@@ -144,7 +152,7 @@ class _ResultScreenState extends State<ResultScreen> {
         'imageurl': url,
         'date': DateTime.now().toLocal()
       });
-      EasyLoading.showSuccess('Great Success!');
+      EasyLoading.showSuccess('');
     } catch (e) {
       print('result screen save error1 : ' + e.toString());
     }

@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:maga/authentication/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../navigation/tabs.dart';
-
+import 'package:email_validator/email_validator.dart';
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => new _LoginState();
@@ -12,144 +14,152 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String errorMessage = '';
   @override
   void initState() {
     super.initState();
     // TODO: implement initState
     print("enter login");
     checkAuth();
-    
   }
-  void checkAuth() async{
+
+  void checkAuth() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     //final uid = user.email;
-    
-    if(user != null){
-       Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Tabs(user)));
+
+    if (user != null) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Tabs(user)));
     }
   }
+
+  void errorMessageChange(String message) {
+    setState(() {
+      errorMessage = message;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Form(
-          key:_formKey,
-          child: Container(
-          padding: const EdgeInsets.all(16.0),
-          height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.green,
-                Colors.lightBlueAccent.withOpacity(0.6),
-              ]
-            )
-          ),
-          child: Column(
-            
-            children: <Widget>[
-              SizedBox(height: 80.0),
-              Container(
-                margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-                height: 80,
-                child: Text('M.A.G.A', style: TextStyle(
+        body: Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        height: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Colors.green,
+          Colors.lightBlueAccent.withOpacity(0.6),
+        ])),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 80.0),
+            Container(
+              margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
+              height: 80,
+              child: Text(
+                'M.A.G.A',
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 46.0,
                   fontWeight: FontWeight.bold,
-                  ),
                 ),
               ),
-              SizedBox(height: 40.0),
-              TextFormField(
-                validator: (input){
-                  if(input.isEmpty){
-                    return 'Please enter an email';
-                  }
+            ),
+            SizedBox(
+              height: 40.0,
+              child: Text(errorMessage,style: TextStyle(color: Colors.red),),
+            ),
+            TextFormField(
+              validator: (input) {
+                if (input.isEmpty) {
+                  return 'Please enter an email';
+                }
+                if(!EmailValidator.validate(input)){
+                  return 'Please enter the correct email';
+                }
+                
+              },
+              keyboardType: TextInputType.emailAddress,
+              onSaved: (input) => _email = input,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(16.0),
+                prefixIcon: Container(
+                  padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                  margin: EdgeInsets.only(right: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        bottomLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                        bottomRight: Radius.circular(10.0)),
+                  ),
+                  child: Icon(Icons.person, color: Colors.lightGreen),
+                ),
+                hintText: 'Enter Your Email',
+                hintStyle: TextStyle(color: Colors.white54),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none),
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.5),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            TextFormField(
+              validator: (input) {
+                if (input.length < 6) {
+                  return 'Password has to be at least 6 characters';
+                }
+              },
+              onSaved: (input) => _password = input,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(16.0),
+                prefixIcon: Container(
+                  padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                  margin: EdgeInsets.only(right: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        bottomLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                        bottomRight: Radius.circular(10.0)),
+                  ),
+                  child: Icon(Icons.lock, color: Colors.lightGreen),
+                ),
+                hintText: 'Enter Your Password',
+                hintStyle: TextStyle(color: Colors.white54),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none),
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.5),
+              ),
+              obscureText: true,
+            ),
+            SizedBox(height: 40.0),
+            SizedBox(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Colors.white,
+                textColor: Colors.lightGreen,
+                padding: EdgeInsets.all(20.0),
+                child: Text('Login'.toUpperCase()),
+                onPressed: () {
+                  signIn();
                 },
-                onSaved: (input) => _email = input,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(16.0),
-                  prefixIcon: Container(
-                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                    margin: EdgeInsets.only(right: 8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
-                        bottomRight: Radius.circular(10.0)
-                      ),
-                    ),
-                    child: Icon(Icons.person, color: Colors.lightGreen), 
-                  ),
-                  hintText: 'Enter Your Email',
-                  hintStyle: TextStyle(color:Colors.white54),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none
-                  ),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.5),
-                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
               ),
-              SizedBox(height: 10.0),
-                TextFormField(
-                  validator: (input){
-                    if(input.length < 6){
-                      return 'Password has to be at least 6 characters';
-                    }
-                  },
-                  onSaved: (input) => _password = input,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(16.0),
-                  prefixIcon: Container(
-                    padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                    margin: EdgeInsets.only(right: 8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
-                        bottomRight: Radius.circular(10.0)
-                      ),
-                    ),
-                    child: Icon(Icons.lock, color: Colors.lightGreen), 
-                  ),
-                  hintText: 'Enter Your Password',
-                  hintStyle: TextStyle(color:Colors.white54),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none
-                  ),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.5),
-                ),
-                obscureText: true,
-              ),
-              SizedBox(height: 40.0),
-              SizedBox(
-                width: double.infinity,
-                child: RaisedButton(
-                  color: Colors.white,
-                  textColor: Colors.lightGreen,
-                  padding: EdgeInsets.all(20.0),
-                  child: Text('Login'.toUpperCase()),
-                  onPressed: () {              
-                    signIn();           
-                  } ,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)
-                  ),
-                ),
-              ),
-              Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlatButton(
+            ),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(
                     textColor: Colors.white70,
                     child: Text("Create Account".toUpperCase()),
                     onPressed: (){
@@ -173,47 +183,57 @@ class _LoginState extends State<Login> {
               SizedBox(height: 10.0),
           ],
         ),
-    ),
-      )
-      
-    );
+      ),
+    ));
   }
 
-  Future signIn() async{
+  Future signIn() async {
     final formState = _formKey.currentState;
-    if(formState.validate()){
+    if (formState.validate()) {
       formState.save();
-      try{
-        
-          final response = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
-          if(response.user != null){
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Tabs(response.user)));
-            print(response.user);
-          }
-          
-      }catch(e){
-          return showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context){
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              title: Text('Error'),
-              content: Text(e),
-              elevation: 24.0,
-              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
-            );
-          }
-        );
+      try {
+        final response = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password);
+        if (response.user != null) {
+          Navigator.pop(context);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => Tabs(response.user)));
+          print(response.user);
+        }
+      } catch (e) {
+        //   return showDialog(
+        //   context: context,
+        //   barrierDismissible: true,
+        //   builder: (BuildContext context){
+        //     return AlertDialog(
+        //       backgroundColor: Colors.white,
+        //       title: Text('Error'),
+        //       content: Text(e.toString()),
+        //       elevation: 24.0,
+        //       shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+        //     );
+        //   }
+        // );
+        if (Platform.isAndroid) {
+          setState(() {
+            switch (e.message) {
+              case 'There is no user record corresponding to this identifier. The user may have been deleted.':
+               errorMessageChange("User not found, please check your email");
+                break;
+              case 'The password is invalid or the user does not have a password.':
+                errorMessageChange("Password not matched, please check your password");
+                break;
+              case 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
+                errorMessageChange("NetworkError, please try again");
+                break;
+              // ...
+              default:
+                print('Case ${e.message} is not yet implemented');
+            }
+          });
+        }
+
       }
-
-      
     }
-
-
   }
-
 }

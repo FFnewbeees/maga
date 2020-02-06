@@ -5,13 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:maga/authentication/signIn.dart';
+//port 'package:maga/authentication/signIn.dart';
 import 'package:maga/camera/pictureItem.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:maga/camera/result_screen.dart';
 import 'package:maga/loader/loader.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+
 class CameraScreen extends StatefulWidget {
   //inal FirebaseUser user;
   //CameraScreen(this.user);
@@ -36,7 +37,7 @@ class _CameraScreenState extends State<CameraScreen> {
     // TODO: implement initState
     super.initState();
     _getQurey();
-   // print();
+    // print();
   }
 
   void _getQurey() {
@@ -46,7 +47,16 @@ class _CameraScreenState extends State<CameraScreen> {
         .orderBy('date', descending: true)
         .snapshots();
 
-      // Firestore.instance.collection('').where('').getDocuments()
+    // Firestore.instance.collection('').where('').getDocuments()
+  }
+
+  Widget nodata() {
+    return Center(
+        child: new Image.asset(
+      'assets/nodata.png',
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.height * 0.8,
+    ));
   }
 
   Widget streamBuilder() {
@@ -57,7 +67,7 @@ class _CameraScreenState extends State<CameraScreen> {
           .where('user', isEqualTo: widget.user.email)
           .orderBy('date', descending: true)
           .snapshots(),
-        
+
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         /// print(snapshot.data.documents.length);
         if (snapshot.hasError) {
@@ -65,93 +75,51 @@ class _CameraScreenState extends State<CameraScreen> {
             child: Text("Error on streambuilder: ${snapshot.error.toString()}"),
           );
         }
-        if(!snapshot.hasData) {
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return new Center(child: Text("No data Scann one"),);
+        if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return nodata();
           }
           return new Loader();
         } else {
           // print(snapshot.data.documents.length);
-           //print(snapshot.connectionState.toString());
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return new Center(child: Text("No data Scann one"),);
+          //print(snapshot.connectionState.toString());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return nodata();
           }
-          
+
           return new ListView.builder(
             itemExtent: 234,
             //cacheExtent: 100.0,
             addAutomaticKeepAlives: true,
             itemBuilder: (ctx, index) {
-            //  print(snapshot.data.documents[index].documentID);
+              //  print(snapshot.data.documents[index].documentID);
               return PictureItem(
                   snapshot.data.documents[index]['imageurl'],
                   snapshot.data.documents[index]['date'] as Timestamp,
                   snapshot.data.documents[index]['result_type'],
                   snapshot.data.documents[index].documentID,
-                  widget.user
-              );
+                  widget.user);
             },
             itemCount: snapshot.data.documents.length,
           );
-          
         }
-        //print(snapshot.requireData.documents.length);
-        // switch (snapshot.connectionState) {
-        //   case ConnectionState.waiting:
-        //     return Loader();
-        //     break;
-        //   case ConnectionState.none:
-        //     print('connection none');
-
-        //     //return streamBuilder();
-        //     break;
-
-        //   case ConnectionState.active:
-        //     print('connection active');
-        //     if (!snapshot.hasData) {
-        //       print("fking hell");
-        //       return Loader();
-        //     }
-        //    // snapshot.data.document
-        //     //print();
-        //     return ListView.builder(
-
-        //       itemBuilder: (ctx, index) {
-        //         return PictureItem(
-        //             snapshot.data.documents[index]['imageurl'],
-        //             snapshot.data.documents[index]['date'] as Timestamp,
-        //             snapshot.data.documents[index]['result_type']);
-        //       },
-        //       itemCount: snapshot.data.documents.length,
-        //     );
-        //     break;
-        //   case ConnectionState.done:
-        //     print('connection done');
-        //     if (!snapshot.hasData) {
-        //       print("fking hell");
-        //       return Loader();
-        //     }
-
-        //     return ListView.builder(
-        //       itemBuilder: (ctx, index) {
-        //         return PictureItem(
-        //             snapshot.data.documents[index]['imageurl'],
-        //             snapshot.data.documents[index]['date'],
-        //             snapshot.data.documents[index]['result_type']);
-        //       },
-        //       itemCount: snapshot.data.documents.length,
-        //     );
-        //     break;
-        // }
       },
     );
   }
 
+  //void showHint() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scanner'),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.info),
+              onPressed: () {
+                showDialog();
+              })
+        ],
       ),
       body: showLoader
           ? Center(
@@ -160,10 +128,117 @@ class _CameraScreenState extends State<CameraScreen> {
           : streamBuilder(),
       floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.camera_alt),
-        onPressed: _cameraAction,
+        onPressed: () async {
+          // await showDialog();
+          _cameraAction();
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  Widget dialogWidget() {
+    return Container(
+      width: 190,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                  Text(
+                    'What belongs in the yellow bin',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    softWrap: true,
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              "\u2022 aluminium and steel tins and cans",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 aerosol cans",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 aluminium foil",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 glass bottles and jars",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 plastic soft-drink and water bottles",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 plastic food containers",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 juice and milk bottles",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 plastic containers for laundry",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 newspapers, magazines,advertising",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 egg cartons",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 envelopes",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 cardboard boxes",
+              softWrap: true,
+            ),
+            Text(
+              "\u2022 pizza boxes",
+              softWrap: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showDialog() async {
+    await showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text("Recycle rule"),
+            content: dialogWidget(),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('OK'),
+                onPressed: () {
+                  //_getImage(context, ImageSource.camera);
+                  // _cameraAction();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   void _cameraAction() {
@@ -175,6 +250,7 @@ class _CameraScreenState extends State<CameraScreen> {
               CupertinoActionSheetAction(
                 child: const Text('Open Camera'),
                 onPressed: () {
+                  // showDialog();
                   _getImage(context, ImageSource.camera);
                   Navigator.of(context).pop();
                 },
@@ -186,25 +262,24 @@ class _CameraScreenState extends State<CameraScreen> {
                   Navigator.of(context).pop();
                 },
               ),
-              SizedBox(
-                height: 10,
-              ),
-              CupertinoActionSheetAction(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
             ],
+            cancelButton: CupertinoActionSheetAction(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            message: Text("Please focus on one object at a time\nEnjoy :)"),
           );
         });
   }
+
   var targetPath;
-  void getFileimage() async{
+  void getFileimage() async {
     final dir = await path_provider.getTemporaryDirectory();
     targetPath = dir.absolute.path + '/temp.jpg';
-  } 
-  
+  }
+
   void _getImage(BuildContext context, ImageSource imageSource) async {
     var compressedFile;
     setState(() {
@@ -216,7 +291,8 @@ class _CameraScreenState extends State<CameraScreen> {
       labels =
           await cloudLabeler.processImage(FirebaseVisionImage.fromFile(image));
       compressedFile = await FlutterImageCompress.compressAndGetFile(
-      image.absolute.path, targetPath ,quality: 40);
+          image.absolute.path, targetPath,
+          quality: 40);
     } catch (e) {
       print(e);
       setState(() {
@@ -235,6 +311,7 @@ class _CameraScreenState extends State<CameraScreen> {
       print("----------------\n");
     }
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => ResultScreen(false,labels, compressedFile,targetPath.toString(),0,null,widget.user)));
+        builder: (_) => ResultScreen(false, labels, compressedFile,
+            targetPath.toString(), 0, null, widget.user)));
   }
 }
