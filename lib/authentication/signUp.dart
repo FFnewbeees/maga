@@ -13,7 +13,7 @@ class _SignUpState extends State<SignUp> {
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     String _email, _password;
-
+   String errorMessage = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +112,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: 40.0,child: errorMessageChange(),),
               SizedBox(
                 width: double.infinity,
                 child: RaisedButton(
@@ -152,7 +152,11 @@ class _SignUpState extends State<SignUp> {
     );
     
   }
-
+  void errorMessageChange(String message) {
+    setState(() {
+      errorMessage = message;
+    });
+  }
   Future signUp() async {
   final formState = _formKey.currentState;
   print("wtf1");
@@ -171,19 +175,20 @@ class _SignUpState extends State<SignUp> {
             }
             
         }catch(e){
-           return showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context){
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              title: Text('Error'),
-              content: Text(e),
-              elevation: 24.0,
-              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
-            );
-          }
-        );
+        //    return showDialog(
+        //     context: context,
+        //     barrierDismissible: true,
+        //     builder: (BuildContext context){
+        //     return AlertDialog(
+        //       backgroundColor: Colors.white,
+        //       title: Text('Error'),
+        //       content: Text(e),
+        //       elevation: 24.0,
+        //       shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+        //     );
+        //   }
+        // );
+
         }
 
         
