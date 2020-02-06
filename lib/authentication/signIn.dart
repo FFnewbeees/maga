@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maga/authentication/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,18 +22,18 @@ class _LoginState extends State<Login> {
     super.initState();
     // TODO: implement initState
     print("enter login");
-    checkAuth();
+    //checkAuth();
   }
 
-  void checkAuth() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    //final uid = user.email;
+  // void checkAuth() async {
+  //   FirebaseUser user = await FirebaseAuth.instance.currentUser();
+  //   //final uid = user.email;
 
-    if (user != null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Tabs(user)));
-    }
-  }
+  //   if (user != null) {
+  //     Navigator.pushReplacement(
+  //         context, MaterialPageRoute(builder: (context) => Tabs(user)));
+  //   }
+  // }
 
   void errorMessageChange(String message) {
     setState(() {
@@ -85,6 +86,7 @@ class _LoginState extends State<Login> {
                 }
               },
               keyboardType: TextInputType.emailAddress,
+              onChanged: (input) => _email = input,
               onSaved: (input) => _email = input,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(16.0),
@@ -180,7 +182,7 @@ class _LoginState extends State<Login> {
                 FlatButton(
                   textColor: Colors.white70,
                   child: Text("Forgot Password".toUpperCase()),
-                  onPressed: () async{
+                  onPressed: () async {
                     resetPassword();
                   },
                 ),
@@ -192,10 +194,68 @@ class _LoginState extends State<Login> {
       ),
     ));
   }
-  void resetPassword() async{
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: _email);
 
+  void resetPassword() async {
+    if (EmailValidator.validate(_email)) {
+      try {
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: _email);
+        showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                    "Reset password link has been sent to your email.."),
+                //content: Text("Do you want to delete?"),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+      } catch (e) {
+        print("signin resetPassword()\n" + e.toString());
+         showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                    "oops, looks your email is not sign up yet"),
+                //content: Text("Do you want to delete?"),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+      }
+    } else {
+      showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              title: Text("oops..Look like your email has wrong format"),
+              //content: Text("Do you want to delete?"),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
+    }
   }
+
   Future signIn() async {
     final formState = _formKey.currentState;
     if (formState.validate()) {

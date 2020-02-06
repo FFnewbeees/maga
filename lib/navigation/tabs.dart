@@ -23,7 +23,14 @@ class _TabsState extends State<Tabs> {
 
   //final PageStorageBucket bucket =PageStorageBucket();
   int _selectedPageIndex = 0;
+   @override
+  void initState() {
+  
+   // print(widget.user.toString()+"cao ni ma ");
+   // _welcomeMessage();
 
+    super.initState();
+  }
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
         onTap: (int index) => setState(() => _selectedPageIndex = index),
         backgroundColor: Theme.of(context).accentColor,
@@ -50,18 +57,7 @@ class _TabsState extends State<Tabs> {
         ],
       );
 
-  @override
-  void initState() {
-    _pages = [
-      CameraScreen(widget.user),
-      NewsPage(widget.user),
-      ProfilePage(widget.user)
-    ];
-    print(widget.user.toString()+"cao ni ma ");
-    _welcomeMessage();
-
-    super.initState();
-  }
+ 
   @override
   void dispose(){
     super.dispose();
@@ -90,6 +86,11 @@ class _TabsState extends State<Tabs> {
 
   @override
   Widget build(BuildContext context) {
+      _pages = [
+      CameraScreen(widget.user),
+      NewsPage(widget.user),
+      ProfilePage(widget.user)
+    ];
     return Scaffold(
       body: IndexedStack(children: _pages, index: _selectedPageIndex),
       bottomNavigationBar: _bottomNavigationBar(_selectedPageIndex),
