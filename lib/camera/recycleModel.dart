@@ -1,12 +1,12 @@
 
 class RecycleModel{
-  List<String> displayHistory = ['No Recyclable','Recyclable','Council collect','Council collect'];
+  List<String> displayHistory = ['Not Recyclable','Recyclable','Council Collect','Council Collect'];
   String commentCheck(int result) {
     if(result == 0){
-      return 'this item can not be recycled';
+      return 'This item can not be recycled';
     }
     if (result == 1) {
-      return 'This item can be recyclable';
+      return 'This item can be recycled';
     }
     if (result == 2) {
       return 'Please contact local council for pick up or drop off';

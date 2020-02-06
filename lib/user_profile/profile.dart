@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     getQuery();
   }
   
-  Future signOut() async{
+  void signOut() async{
       await FirebaseAuth.instance.signOut();
     Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> Login()));

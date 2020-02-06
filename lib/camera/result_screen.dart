@@ -29,8 +29,8 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-  String result = 'Not recycle';
-  String comment = 'this item can not be recycled';
+  String result = 'Not recyclable';
+  String comment = 'This item can not be recycled';
   // Future<FirebaseUser> user = FirebaseAuth.instance.currentUser();
   FirebaseAuth auth = FirebaseAuth.instance;
   int result_type = 0;
@@ -178,6 +178,79 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
+  TextStyle getColor(){
+    var type;
+    if(!widget.iconCheck) type = result_type;
+    else type = widget.resultType;
+
+      if(type == 0){
+        return TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.red);
+      }
+
+      else if(type == 1){
+        return TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.green);
+      }
+
+      else if(type == 2){
+        return TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.blue);
+      }
+
+      else{
+        return TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.blue);
+      }
+    }
+
+  Column getWidget(){
+    if(widget.resultType == 1){
+      return Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          new Image.asset('assets/recyclable.png', width: 100, height: 100,),
+          SizedBox(height: 20),
+          Text('Please put this item into the yellow recycle bin', 
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
+        ],
+      );
+    }
+    else if(widget.resultType == 0){
+      return Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          new Image.asset('assets/unrecyclable.png', width: 100, height: 100,),
+          SizedBox(height: 20),
+          Text('Please put this item into the waste bin',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        ],
+      );
+    }
+    else if(widget.resultType == 2){
+      return Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          new Image.asset('assets/council.png', width: 100, height: 100,),
+          SizedBox(height: 20),
+          Text('Council Contact Number: 02 9265 9333' , 
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
+        ],
+      );
+    }
+    else {
+      return Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          new Image.asset('assets/council.png', width: 100, height: 100,),
+          SizedBox(height: 20),
+          Text('Council Contact Number: 02 9265 9333', 
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
+        ],
+      );
+    }
+  }
+
+  
+    
+  
+
   @override
   Widget build(BuildContext context) {
     // print('fk'+widget.labels[0].text.toString());
@@ -208,6 +281,7 @@ class _ResultScreenState extends State<ResultScreen> {
         ),
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(10),
@@ -228,13 +302,19 @@ class _ResultScreenState extends State<ResultScreen> {
                     : Image.file(
                         widget.imageFile,
                         fit: BoxFit.cover,
+                        width: double.infinity,
                         height: 200,
                       ),
               ),
-              Text(result),
-              Text(comment),
+              Text(result , style: getColor(),) ,
+              SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(comment, style: TextStyle(fontSize: 15,),),
+              ),
+              
               widget.iconCheck
-                  ? Container()
+                  ? getWidget()
                   : Container(
                       height: MediaQuery.of(context).size.height - 225,
                       child: ListView.builder(

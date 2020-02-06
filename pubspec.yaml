@@ -58,6 +58,9 @@ flutter:
    - assets/recycling.jpg
    - assets/splash.png
    - assets/nodata.png
+   - assets/unrecyclable.png
+   - assets/recyclable.png
+   - assets/council.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

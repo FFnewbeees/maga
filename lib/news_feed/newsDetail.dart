@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -88,35 +89,41 @@ void saveAsFavourite() async {
       await collectionRef.document().setData(data);
       
       print(isFavourite);
-        return showDialog(
+        showCupertinoDialog(
           context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context){
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              title: Text('Reminder'),
-              content: Text('Saved Successful'),
-              elevation: 24.0,
-              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              title: Text("Reminder"),
+              content: Text("\nSaved To News Collection Successfully"),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             );
-          }
-        );
+          });
       
 
     }catch(error){
-      return showDialog(
+      showCupertinoDialog(
           context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context){
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              title: Text('Error'),
-              content: Text(error),
-              elevation: 24.0,
-              shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              title: Text("Reminder"),
+              content: Text("\n ${error}"),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             );
-          }
-        );
+          });
     }
   }
 

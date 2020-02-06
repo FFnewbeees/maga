@@ -25,16 +25,6 @@ class _LoginState extends State<Login> {
     //checkAuth();
   }
 
-  // void checkAuth() async {
-  //   FirebaseUser user = await FirebaseAuth.instance.currentUser();
-  //   //final uid = user.email;
-
-  //   if (user != null) {
-  //     Navigator.pushReplacement(
-  //         context, MaterialPageRoute(builder: (context) => Tabs(user)));
-  //   }
-  // }
-
   void errorMessageChange(String message) {
     setState(() {
       errorMessage = message;
@@ -51,8 +41,8 @@ class _LoginState extends State<Login> {
         height: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-          Colors.green,
-          Colors.lightBlueAccent.withOpacity(0.6),
+          Colors.green[400],
+          Colors.lightBlueAccent.withOpacity(0.8),
         ])),
         child: Column(
           children: <Widget>[
@@ -162,13 +152,14 @@ class _LoginState extends State<Login> {
             ),
             Spacer(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 FlatButton(
                     textColor: Colors.white70,
                     child: Text("Create Account".toUpperCase()),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => SignUp(),
