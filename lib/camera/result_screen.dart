@@ -37,8 +37,10 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void initState() {
     // TODO: implement initState
+   // print("camera screen test1");
     super.initState();
     if (!widget.iconCheck) {
+    //  print("camera screen test2");
       for (ImageLabel label in widget.labels) {
         //label.text
         int a = LabelCheck().check(label.text);
@@ -64,7 +66,18 @@ class _ResultScreenState extends State<ResultScreen> {
           break;
         }
       }
-    } else {}
+      print(widget.imageFile.toString());
+    } else {
+      result = RecycleModel().displayHistory[widget.resultType];
+      comment = RecycleModel().commentCheck(widget.resultType);
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print("disposed");
   }
 
   // String commentCheck(int result) {
@@ -87,25 +100,31 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void dialogYes() async {
-  // print(widget.documentID);
-   // print(widget.user.email);
+    // print(widget.documentID);
+    // print(widget.user.email);
+    Navigator.of(context).pop();
     EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
-      EasyLoading.instance.maskType = EasyLoadingMaskType.black;
-      EasyLoading.show(status: '');
-    var tmp = await Firestore.instance.collection('scanHistory').document(widget.documentID).get();
+    EasyLoading.instance.maskType = EasyLoadingMaskType.black;
+    EasyLoading.show(status: '');
+    var tmp = await Firestore.instance
+        .collection('scanHistory')
+        .document(widget.documentID)
+        .get();
     //print(tmp.data);
-    StorageReference storageReference = await FirebaseStorage().getReferenceFromUrl(tmp.data['imageurl']);
+    StorageReference storageReference =
+        await FirebaseStorage().getReferenceFromUrl(tmp.data['imageurl']);
     storageReference.delete();
     await Firestore.instance
         .collection('scanHistory')
         .document(widget.documentID)
         .delete();
-    EasyLoading.showSuccess('');    
-    Navigator.of(context).pop();
+    EasyLoading.showSuccess('');
+
     Navigator.of(context).pop();
   }
 
   void delete() async {
+    //Navigator.of(context).pop();
     showCupertinoDialog(
         context: context,
         builder: (BuildContext context) {
@@ -116,6 +135,7 @@ class _ResultScreenState extends State<ResultScreen> {
               CupertinoDialogAction(
                 child: Text('Yes'),
                 onPressed: () {
+                  //Navigator.of(context).pop();
                   dialogYes();
                 },
               ),
@@ -162,70 +182,76 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget build(BuildContext context) {
     // print('fk'+widget.labels[0].text.toString());
     return FlutterEasyLoading(
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text('Result'),
-            actions: <Widget>[
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Result'),
+          actions: <Widget>[
+            widget.iconCheck
+                ? IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      //CircularProgressIndicator();
+                      print('delete');
+                      delete();
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(Icons.save),
+                    onPressed: () {
+                      //CircularProgressIndicator();
+                      ;
+                      save();
+                    },
+                  ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: widget.iconCheck
+                    ?
+                    //   Image.network(
+                    //         widget.imageUrl,
+                    //         fit: BoxFit.cover,
+                    //         height: 200,
+                    //       )
+                    FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: widget.imageUrl,
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        widget.imageFile,
+                        fit: BoxFit.cover,
+                        height: 200,
+                      ),
+              ),
+              Text(result),
+              Text(comment),
               widget.iconCheck
-                  ? IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        //CircularProgressIndicator();
-                        delete();
-                      },
-                    )
-                  : IconButton(
-                      icon: Icon(Icons.save),
-                      onPressed: () {
-                        //CircularProgressIndicator();
-                        save();
-                      },
+                  ? Container()
+                  : Container(
+                      height: MediaQuery.of(context).size.height - 225,
+                      child: ListView.builder(
+                        itemBuilder: (ctx, index) {
+                          return ListTile(
+                            title: Text(widget.labels[index].text),
+                            subtitle: Text(
+                                widget.labels[index].entityId.toString() +
+                                    "\n" +
+                                    widget.labels[index].confidence.toString()),
+                            isThreeLine: true,
+                          );
+                        },
+                        itemCount: widget.labels.length,
+                      ),
                     ),
             ],
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: widget.iconCheck
-                      ? FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: widget.imageUrl,
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          widget.imageFile,
-                          fit: BoxFit.cover,
-                          height: 200,
-                        ),
-                ),
-                Text(result),
-                Text(comment),
-                widget.iconCheck
-                    ? Container()
-                    : Container(
-                        height: MediaQuery.of(context).size.height - 225,
-                        child: ListView.builder(
-                          itemBuilder: (ctx, index) {
-                            return ListTile(
-                              title: Text(widget.labels[index].text),
-                              subtitle: Text(widget.labels[index].entityId
-                                      .toString() +
-                                  "\n" +
-                                  widget.labels[index].confidence.toString()),
-                              isThreeLine: true,
-                            );
-                          },
-                          itemCount: widget.labels.length,
-                        ),
-                      ),
-              ],
-            ),
           ),
         ),
       ),

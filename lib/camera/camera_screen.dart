@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-//port 'package:maga/authentication/signIn.dart';
+import 'package:maga/authentication/signIn.dart';
 import 'package:maga/camera/pictureItem.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:maga/camera/result_screen.dart';
@@ -277,7 +277,7 @@ class _CameraScreenState extends State<CameraScreen> {
   var targetPath;
   void getFileimage() async {
     final dir = await path_provider.getTemporaryDirectory();
-    targetPath = dir.absolute.path + '/temp.jpg';
+    targetPath = dir.absolute.path + '${DateTime.now()}.jpg';
   }
 
   void _getImage(BuildContext context, ImageSource imageSource) async {
@@ -290,6 +290,7 @@ class _CameraScreenState extends State<CameraScreen> {
       await getFileimage();
       labels =
           await cloudLabeler.processImage(FirebaseVisionImage.fromFile(image));
+
       compressedFile = await FlutterImageCompress.compressAndGetFile(
           image.absolute.path, targetPath,
           quality: 40);
