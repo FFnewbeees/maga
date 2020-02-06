@@ -158,16 +158,16 @@ class _LoginState extends State<Login> {
                       ));  
                     }
                   ),
-                  Container(
-                    color: Colors.white54,
-                    width: 2.0,
-                    height: 20.0,
-                  ),
-                  FlatButton(
-                    textColor: Colors.white70,
-                    child: Text("Forgot Password".toUpperCase()),
-                    onPressed: (){},  
-                  ),
+                  // Container(
+                  //   color: Colors.white54,
+                  //   width: 2.0,
+                  //   height: 20.0,
+                  // ),
+                  // FlatButton(
+                  //   textColor: Colors.white70,
+                  //   child: Text("Forgot Password".toUpperCase()),
+                  //   onPressed: (){},  
+                  // ),
                 ],
               ),
               SizedBox(height: 10.0),

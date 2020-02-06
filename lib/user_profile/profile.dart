@@ -1,4 +1,6 @@
 
+import 'package:maga/user_profile/editProfile.dart';
+
 import '../loader/loader.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,10 +54,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: (){},
-          ),
+        // leading: IconButton(
+        //     icon: Icon(Icons.settings),
+        //     onPressed: (){
+        //       Navigator.pushNamed(context,
+        //         EditProfile.routeName, 
+        //         arguments: {
+        //           'profileImage': widget.user.photoUrl,
+        //       });
+        //     },
+        //   ),
         title: Text('Profile'),
         actions: <Widget>[
           IconButton(
@@ -175,11 +183,17 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 60.0),
-                  Text(widget.user.displayName.toString(), style: Theme.of(context).textTheme.title),
+                  SizedBox(height: 50.0),
+                  FlatButton(
+                      child: Text('Change Profile Photo'),
+                      color: Colors.grey[350],
+                      onPressed: (){
+                        
+                      },
+                    ),
                   SizedBox(height: 10.0),
-                  Text(widget.user.email),
-                  SizedBox(height: 10.0),
+                  Text("Email:" + " " +widget.user.email),
+                  SizedBox(height: 20.0),
                 ],
               ),
             ),
@@ -192,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 shape: CircleBorder(),
                 child: CircleAvatar(
                   radius: 40.0,
-                  //avator image here
+                  child: Image.network(widget.user.photoUrl.toString()),
                 ),
               )
             ],

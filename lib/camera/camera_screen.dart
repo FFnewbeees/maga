@@ -79,7 +79,7 @@ class _CameraScreenState extends State<CameraScreen> {
           
           return new ListView.builder(
             itemExtent: 234,
-            cacheExtent: 100.0,
+            //cacheExtent: 100.0,
             addAutomaticKeepAlives: true,
             itemBuilder: (ctx, index) {
             //  print(snapshot.data.documents[index].documentID);
