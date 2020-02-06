@@ -180,7 +180,9 @@ class _LoginState extends State<Login> {
                 FlatButton(
                   textColor: Colors.white70,
                   child: Text("Forgot Password".toUpperCase()),
-                  onPressed: () {},
+                  onPressed: () async{
+                    resetPassword();
+                  },
                 ),
               ],
             ),
@@ -190,7 +192,10 @@ class _LoginState extends State<Login> {
       ),
     ));
   }
+  void resetPassword() async{
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: _email);
 
+  }
   Future signIn() async {
     final formState = _formKey.currentState;
     if (formState.validate()) {

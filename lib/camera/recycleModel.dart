@@ -3,7 +3,7 @@ class RecycleModel{
   List<String> displayHistory = ['No Recycle','Recycle','Council collect','Councile collect'];
   String commentCheck(int result) {
     if(result == 0){
-      return null;
+      return 'this item can not be recycled';
     }
     if (result == 1) {
       return 'this item can be recycled';
