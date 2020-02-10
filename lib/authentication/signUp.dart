@@ -89,7 +89,7 @@ class _SignUpState extends State<SignUp> {
               TextFormField(
                 validator: (input) {
                   if (input.length < 6) {
-                    return 'Longer password please';
+                    return 'At least 6 characters';
                   }
                 },
                 onSaved: (input) => _password = input,
@@ -162,15 +162,16 @@ class _SignUpState extends State<SignUp> {
 
   Future signUp() async {
     //EasyLoading.showProgress(value);
-    EasyLoading.show();
+    
     final formState = _formKey.currentState;
    // print("wtf1");
     if (formState.validate()) {
       formState.save();
+      EasyLoading.show();
       try {
         final response = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
-            EasyLoading.dismiss();
+             EasyLoading.showSuccess('', duration: new Duration(seconds: 1));
         if (response.user != null) {
           Navigator.pop(context);
           Navigator.pushReplacement(context,
@@ -190,6 +191,7 @@ class _SignUpState extends State<SignUp> {
         //     );
         //   }
         // );
+        EasyLoading.dismiss();
         switch (e.code) {
           case "ERROR_EMAIL_ALREADY_IN_USE":
            errorMessageChange("Email already in use, please login or change email");
@@ -197,6 +199,8 @@ class _SignUpState extends State<SignUp> {
            default: break;
         }
       }
+     
     }
+     EasyLoading.dismiss();
   }
 }

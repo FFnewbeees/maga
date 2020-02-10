@@ -45,7 +45,6 @@ class FavNewsItem extends StatelessWidget {
       );
     }
 
-
     return InkWell(
         onTap: () => selectFavouriteNews(context),
           child: Container(
