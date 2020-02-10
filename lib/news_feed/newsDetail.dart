@@ -132,7 +132,7 @@ void saveAsFavourite() async {
       appBar: AppBar(
         backgroundColor: Colors.green,
         elevation: 0,
-        automaticallyImplyLeading: false,
+       // automaticallyImplyLeading: false,
         title: Text("Article Detail", 
         style: TextStyle(color: Colors.white)),
       ),
