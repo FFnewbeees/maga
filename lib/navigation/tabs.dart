@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:maga/authentication/signIn.dart';
+import '../authentication/signIn.dart';
 import '../camera/camera_screen.dart';
 import '../news_feed/newsPage.dart';
 import '../user_profile/profile.dart';

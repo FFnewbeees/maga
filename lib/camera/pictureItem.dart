@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:maga/camera/recycleModel.dart';
+import '../camera/recycleModel.dart';
 import './result_screen.dart';
 import 'package:transparent_image/transparent_image.dart';
 

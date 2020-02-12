@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:maga/authentication/signIn.dart';
-import 'package:maga/navigation/tabs.dart';
+import '../authentication/signIn.dart';
+import '../navigation/tabs.dart';
 
 class SplashScren extends StatefulWidget {
   @override

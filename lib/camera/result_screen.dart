@@ -7,8 +7,8 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:maga/camera/labelCheck.dart';
-import 'package:maga/camera/recycleModel.dart';
+import '../camera/labelCheck.dart';
+import '../camera/recycleModel.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
