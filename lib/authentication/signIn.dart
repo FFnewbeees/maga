@@ -38,7 +38,8 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return FlutterEasyLoading(
       child: Scaffold(
-          body: Form(
+        resizeToAvoidBottomPadding: false,
+        body: Form(
         key: _formKey,
         child: Container(
           padding: const EdgeInsets.all(16.0),
