@@ -17,7 +17,7 @@ import '../authentication/signIn.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 class ProfilePage extends StatefulWidget {
-   FirebaseUser user;
+  final FirebaseUser user;
   ProfilePage(this.user);
 
   @override
