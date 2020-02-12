@@ -154,12 +154,15 @@ class _ProfilePageState extends State<ProfilePage> {
         //   ),
         title: Text('Profile'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              signOut();
-            },
-          )
+          
+          FlatButton(
+            onPressed: ()=> signOut(),
+            child: Column(children: <Widget>[
+              Icon(Icons.exit_to_app,color: Colors.white,),
+              Text('Logout',style: TextStyle(color: Colors.white),),
+            ],)
+            
+          ),
         ],
       ),
       body: Stack(
