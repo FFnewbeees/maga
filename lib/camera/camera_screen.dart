@@ -84,7 +84,7 @@ class _CameraScreenState extends State<CameraScreen> {
           // print(snapshot.data.documents.length);
           //print(snapshot.connectionState.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return nodata();
+           // return nodata();
           }
 
           return new ListView.builder(
@@ -121,11 +121,11 @@ class _CameraScreenState extends State<CameraScreen> {
               })
         ],
       ),
-      body: showLoader
-          ? Center(
+      body: !showLoader
+          ? streamBuilder()
+          : Center(
               child: Loader(),
-            )
-          : streamBuilder(),
+            ),
       floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.camera_alt),
         onPressed: () async {
