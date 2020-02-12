@@ -43,7 +43,7 @@ class PictureItem extends StatelessWidget {
                     image: imageUrl,
                     height: 160,
                     width: double.infinity,
-                    fit: BoxFit.cover,
+                    //fit: BoxFit.cover,
                     // Image.network(
                     //   imageUrl,
                     //   height: 160,
