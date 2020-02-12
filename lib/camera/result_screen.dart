@@ -332,7 +332,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         image: widget.imageUrl,
                         height: 200,
                         width: double.infinity,
-                        fit: BoxFit.cover,
+                        //fit: BoxFit.cover,
                       )
                     : Image.file(
                         widget.imageFile,
