@@ -297,15 +297,16 @@ class _LoginState extends State<Login> {
               print('Case ${e.message} is not yet implemented');
           }
         } else if (Platform.isIOS) {
+          print(e.code);
           switch (e.code) {
-            case 'Error 17011':
+            case 'ERROR_USER_NOT_FOUND':
               errorMessageChange("User not found, please check your email");
               break;
-            case 'Error 17009':
+            case 'ERROR_WRONG_PASSWORD':
               errorMessageChange(
                   "Password not matched, please check your password");
               break;
-            case 'Error 17020':
+            case 'ERROR_NETWORK_REQUEST_FAILED':
               errorMessageChange("Network error, please try again");
               break;
             // ...
