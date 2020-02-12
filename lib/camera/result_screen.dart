@@ -17,7 +17,7 @@ class ResultScreen extends StatefulWidget {
   final List<ImageLabel> labels;
   final File imageFile;
   final String imageUrl;
-  final int resultType;
+  int resultType;
   String documentID;
   final FirebaseUser user;
 
@@ -68,6 +68,7 @@ class _ResultScreenState extends State<ResultScreen> {
           break;
         }
       }
+      widget.resultType = result_type;
       print(widget.imageFile.toString());
     } else {
       result = RecycleModel().displayHistory[widget.resultType];
@@ -308,6 +309,7 @@ class _ResultScreenState extends State<ResultScreen> {
                       //CircularProgressIndicator();
 
                       save();
+                      //Navigator.of(context).dispose();
                     },
                   ),
           ],
@@ -353,24 +355,23 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                 ),
               ),
-              widget.iconCheck
-                  ? getWidget()
-                  : Container(
-                      height: MediaQuery.of(context).size.height - 225,
-                      child: ListView.builder(
-                        itemBuilder: (ctx, index) {
-                          return ListTile(
-                            title: Text(widget.labels[index].text),
-                            subtitle: Text(
-                                widget.labels[index].entityId.toString() +
-                                    "\n" +
-                                    widget.labels[index].confidence.toString()),
-                            isThreeLine: true,
-                          );
-                        },
-                        itemCount: widget.labels.length,
-                      ),
-                    ),
+              getWidget(),
+              // : Container(
+              //     height: MediaQuery.of(context).size.height - 225,
+              //     child: ListView.builder(
+              //       itemBuilder: (ctx, index) {
+              //         return ListTile(
+              //           title: Text(widget.labels[index].text),
+              //           subtitle: Text(
+              //               widget.labels[index].entityId.toString() +
+              //                   "\n" +
+              //                   widget.labels[index].confidence.toString()),
+              //           isThreeLine: true,
+              //         );
+              //       },
+              //       itemCount: widget.labels.length,
+              //     ),
+              //   ),
             ],
           ),
         ),

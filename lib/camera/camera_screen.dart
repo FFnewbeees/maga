@@ -84,9 +84,12 @@ class _CameraScreenState extends State<CameraScreen> {
           // print(snapshot.data.documents.length);
           //print(snapshot.connectionState.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
-           // return nodata();
+            // return nodata();
           }
 
+          if (snapshot.data.documents.length == 0) {
+            return nodata();
+          }
           return new ListView.builder(
             itemExtent: 234,
             //cacheExtent: 100.0,
