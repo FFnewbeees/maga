@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:maga/news_feed/news.dart';
+import '../news_feed/news.dart';
 import 'newsItem.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:maga/loader/loader.dart';
+import '../loader/loader.dart';
 
 class NewsPage extends StatefulWidget {
   @override
@@ -88,7 +88,11 @@ class _NewsPageState extends State<NewsPage> {
         title: Text('News Feed'),
       ),
       body: RefreshIndicator(
-        onRefresh: () => fetchNews(),
+        onRefresh: () => fetchNews().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      }),
         child: _isLoading
             ? Loader()
             : ListView.builder(

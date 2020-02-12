@@ -5,11 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:maga/authentication/signIn.dart';
-import 'package:maga/camera/pictureItem.dart';
+import '../authentication/signIn.dart';
+import '../camera/pictureItem.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:maga/camera/result_screen.dart';
-import 'package:maga/loader/loader.dart';
+import '../camera/result_screen.dart';
+import '../loader/loader.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 

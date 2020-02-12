@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maga/authentication/signIn.dart';
-import 'package:maga/authentication/signUp.dart';
+import '../authentication/signIn.dart';
+import '../authentication/signUp.dart';
 
 class WelcomePage extends StatefulWidget {
   @override

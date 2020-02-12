@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:maga/authentication/signUp.dart';
+import '../authentication/signUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../navigation/tabs.dart';
 import 'package:email_validator/email_validator.dart';

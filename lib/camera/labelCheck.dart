@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maga/camera/recycleModel.dart';
+import '../camera/recycleModel.dart';
 
 class LabelCheck {
   //final String label;
