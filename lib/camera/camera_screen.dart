@@ -301,9 +301,7 @@ class _CameraScreenState extends State<CameraScreen> {
       });
       return;
     }
-    setState(() {
-      showLoader = false;
-    });
+
     print("length of result " + labels.length.toString());
     for (ImageLabel label in labels) {
       print(label.confidence);
@@ -314,5 +312,8 @@ class _CameraScreenState extends State<CameraScreen> {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => ResultScreen(false, labels, compressedFile,
             targetPath.toString(), 0, null, widget.user)));
+    setState(() {
+      showLoader = false;
+    });
   }
 }

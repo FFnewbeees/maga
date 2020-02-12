@@ -15,7 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String _email, _password;
+  String _email, _password ;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String errorMessage = '';
   @override
@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return FlutterEasyLoading(
-          child: Scaffold(
+      child: Scaffold(
           body: Form(
         key: _formKey,
         child: Container(
@@ -198,9 +198,9 @@ class _LoginState extends State<Login> {
             context: context,
             builder: (BuildContext context) {
               return CupertinoAlertDialog(
-                title: Text(
-                    "Reset password link has been sent to your email.."),
-                //content: Text("Do you want to delete?"),
+                title:
+                    Text("Reset password link has been sent to your email"),
+                content: Text(_email.toString()),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: Text('Ok'),
@@ -213,12 +213,11 @@ class _LoginState extends State<Login> {
             });
       } catch (e) {
         print("signin resetPassword()\n" + e.toString());
-         showCupertinoDialog(
+        showCupertinoDialog(
             context: context,
             builder: (BuildContext context) {
               return CupertinoAlertDialog(
-                title: Text(
-                    "oops, looks your email is not sign up yet"),
+                title: Text("oops, looks your email is not sign up yet"),
                 //content: Text("Do you want to delete?"),
                 actions: <Widget>[
                   CupertinoDialogAction(
@@ -259,7 +258,7 @@ class _LoginState extends State<Login> {
         EasyLoading.show();
         final response = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
-        EasyLoading.dismiss();    
+        EasyLoading.dismiss();
         if (response.user != null) {
           Navigator.pop(context);
           Navigator.pushReplacement(context,
@@ -280,6 +279,7 @@ class _LoginState extends State<Login> {
         //     );
         //   }
         // );
+        EasyLoading.dismiss();
         if (Platform.isAndroid) {
           switch (e.message) {
             case 'There is no user record corresponding to this identifier. The user may have been deleted.':
