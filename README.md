@@ -1,6 +1,6 @@
 # maga
 
-A new Flutter project.
+A recycle scanner Flutter project.
 
 ## Getting Started
 
